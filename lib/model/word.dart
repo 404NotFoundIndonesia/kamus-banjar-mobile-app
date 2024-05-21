@@ -8,13 +8,16 @@ class Word {
     word = json['word'];
     alphabet = json['alphabet'];
     syllable = json['syllables'] ?? '';
+    List<List<WordDefinition>> _definitions = [];
+
     for(var meaning in json['meanings']) {
       List<WordDefinition> meaningDefinition = [];
       for(var definition in meaning['definitions'] ?? []) {
         meaningDefinition.add(WordDefinition.fromJson(definition));
       }
-      definitions.add(meaningDefinition);
+      _definitions.add(meaningDefinition);
     }
+    definitions = _definitions;
   }
 }
 
@@ -26,9 +29,11 @@ class WordDefinition {
   WordDefinition.fromJson(Map<String, dynamic> json) {
     definition = json['definition'] ?? '-';
     partOfSpeech = json['partOfSpeech'] ?? '-';
+    List<WordExample> _examples = [];
     for(var example in json['examples'] ?? []) {
-      examples.add(WordExample.fromJson(example));
+      _examples.add(WordExample.fromJson(example));
     }
+    examples = _examples;
   }
 }
 

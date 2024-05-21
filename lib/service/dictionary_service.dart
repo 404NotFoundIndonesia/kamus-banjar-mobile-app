@@ -1,23 +1,50 @@
-import 'dart:collection';
+import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
-import 'package:kamus_banjar_mobile_app/model/word_model.dart';
-import 'package:kamus_banjar_mobile_app/repository/alphabet_repository.dart';
-import 'package:kamus_banjar_mobile_app/repository/word_repository.dart';
+import 'package:http/http.dart' as http;
+import 'package:kamus_banjar_mobile_app/model/word.dart';
 
-class DictionaryService extends ChangeNotifier {
-  AlphabetRepository _alphabetRepository;
-  WordRepository _wordRepository;
+class DictionaryService {
+  final String baseUrl;
 
-  DictionaryService(this._alphabetRepository, this._wordRepository);
+  const DictionaryService({required this.baseUrl});
 
-  final List<String> _alphabets = [];
-  final Map<String, List<String>> _words = {};
-  final Map<String, Word> _definitions = {};
+  Future<List<String>> getAlphabets() async {
+    List<String> result = [];
 
-  UnmodifiableListView<String> get alphabets => UnmodifiableListView(_alphabets);
-  UnmodifiableMapView<String, List<String>> get words => UnmodifiableMapView(_words);
-  UnmodifiableMapView<String, Word> get definitions => UnmodifiableMapView(_definitions);
+    final response = await http.get(Uri.parse('$baseUrl/api/v1/alphabets'));
+    final body = jsonDecode(response.body);
+    if (response.statusCode == 200) {
+      for(var letter in body['data']) {
+        result.add(letter['letter'].toString());
+      }
+      return result;
+    } else {
+      throw Exception(body['message']);
+    }
+  }
 
+  Future<List<String>> getWords(String alphabet) async {
+    List<String> result = [];
 
+    final response = await http.get(Uri.parse('$baseUrl/api/v1/alphabets/$alphabet'));
+    final body = jsonDecode(response.body);
+    if (response.statusCode == 200) {
+      for(var word in body['data']['words']) {
+        result.add(word.toString());
+      }
+      return result;
+    } else {
+      throw Exception(body['message']);
+    }
+  }
+
+  Future<Word> getWord(String word) async {
+    final response = await http.get(Uri.parse('$baseUrl/api/v1/entries/$word'));
+    final body = jsonDecode(response.body);
+    if (response.statusCode == 200) {
+      return Word.fromJson(body['data']);
+    } else {
+      throw Exception(body['message']);
+    }
+  }
 }
