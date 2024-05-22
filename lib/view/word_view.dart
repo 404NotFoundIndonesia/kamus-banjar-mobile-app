@@ -124,8 +124,29 @@ class _WordViewState extends State<WordView> {
                                   ListView.builder(itemBuilder: (context, index2) {
                                     return Padding(
                                       padding: const EdgeInsets.symmetric(vertical: 8),
-                                      child: Text(word.definitions[index1][index2].definition, style: GoogleFonts.poppins()
-                                          .copyWith(fontSize: 14),),
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(word.definitions[index1][index2].definition, style: GoogleFonts.poppins()
+                                              .copyWith(fontSize: 14),),
+                                          Padding(
+                                            padding: const EdgeInsets.only(left: 10, top: 5),
+                                            child: ListView.builder(itemBuilder: (context, index3) {
+                                              return Column(
+                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Text('[bjn] ${word.definitions[index1][index2].examples[index3].bjn}', style: GoogleFonts.poppins()
+                                                      .copyWith(fontSize: 12, fontStyle: FontStyle.italic),),
+                                                  Text('[id] ${word.definitions[index1][index2].examples[index3].id}', style: GoogleFonts.poppins()
+                                                      .copyWith(fontSize: 12, fontStyle: FontStyle.italic),),
+                                                ],
+                                              );
+                                            }, itemCount: word.definitions[index1][index2].examples.length, shrinkWrap: true,),
+                                          ),
+                                        ],
+                                      ),
                                     );
                                   }, itemCount: word.definitions[index1].length, shrinkWrap: true,)
                                 ],
