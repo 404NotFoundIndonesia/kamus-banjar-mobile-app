@@ -4,7 +4,7 @@ import 'package:kamus_banjar_mobile_app/service/dictionary_service.dart';
 import 'package:kamus_banjar_mobile_app/view/alphabets_view.dart';
 
 void main() {
-  const DictionaryService dictionaryService = DictionaryService(baseUrl: 'https://kamus-banjar.iqbaleff214.com');
+  const DictionaryService dictionaryService = DictionaryService(baseUrl: 'http://kamus-banjar.404notfound.fun');
   const DictionaryRepository dictionaryRepository = DictionaryRepository(dictionaryService: dictionaryService);
 
   runApp(const MyApp(dictionaryRepository: dictionaryRepository,));
