@@ -8,14 +8,19 @@ class DictionaryService {
 
   const DictionaryService({required this.baseUrl});
 
-  Future<List<String>> getAlphabets() async {
-    List<String> result = [];
+  Future<List<Map<String, dynamic>>> getAlphabets() async {
+    List<Map<String, dynamic>> result = [];
 
     final response = await http.get(Uri.parse('$baseUrl/api/v1/alphabets'));
     final body = jsonDecode(response.body);
+
     if (response.statusCode == 200) {
-      for(var letter in body['data']) {
-        result.add(letter['letter'].toString());
+      for (var letter in body['data']) {
+        result.add({
+          'letter': letter['letter'].toString(),
+          'total': letter['total'] ??
+              0, // Assuming 'total' can be null, so we set it to 0 if it's missing.
+        });
       }
       return result;
     } else {
@@ -26,10 +31,11 @@ class DictionaryService {
   Future<List<String>> getWords(String alphabet) async {
     List<String> result = [];
 
-    final response = await http.get(Uri.parse('$baseUrl/api/v1/alphabets/$alphabet'));
+    final response =
+        await http.get(Uri.parse('$baseUrl/api/v1/alphabets/$alphabet'));
     final body = jsonDecode(response.body);
     if (response.statusCode == 200) {
-      for(var word in body['data']['words']) {
+      for (var word in body['data']['words']) {
         result.add(word.toString());
       }
       return result;

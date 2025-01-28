@@ -6,7 +6,7 @@ class DictionaryRepository {
 
   const DictionaryRepository({required this.dictionaryService});
 
-  Future<List<String>> getAlphabets() async {
+  Future<List<Map<String, dynamic>>> getAlphabets() async {
     return await dictionaryService.getAlphabets();
   }
 
