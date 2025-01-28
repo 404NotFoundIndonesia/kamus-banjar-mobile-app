@@ -16,6 +16,7 @@ class WordView extends StatefulWidget {
 
 class _WordViewState extends State<WordView> {
   late Future<Word> word;
+  bool debugMode = false;
 
   @override
   void initState() {
@@ -129,94 +130,94 @@ class _WordViewState extends State<WordView> {
                                     ],
                                   ),
                                   const SizedBox(height: 20),
-                                  Container(
-                                    padding: const EdgeInsets.all(16.0),
-                                    decoration: BoxDecoration(
-                                      color: Colors.blue.shade50,
-                                      borderRadius: BorderRadius.circular(24),
-                                    ),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        const Text('Turunan',
-                                            style: TextStyle(fontSize: 20)),
-                                        const SizedBox(height: 8),
-                                        ...word.derivatives
-                                            .asMap()
-                                            .entries
-                                            .map((entry) {
-                                          final index = entry.key;
-                                          final derivative = entry.value;
-                                          return Container(
-                                            padding: const EdgeInsets.all(16.0),
-                                            margin: EdgeInsets.only(
-                                                bottom: index ==
-                                                        word.derivatives
-                                                                .length -
-                                                            1
-                                                    ? 0
-                                                    : 16.0),
-                                            decoration: BoxDecoration(
-                                              color: Colors.blue.shade100,
-                                              borderRadius:
-                                                  BorderRadius.circular(16),
-                                            ),
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.stretch,
-                                              children: [
-                                                Text(
-                                                  derivative.word,
-                                                  style: const TextStyle(
-                                                      fontSize: 24,
-                                                      fontWeight:
-                                                          FontWeight.w700),
-                                                ),
-                                                Text(derivative.syllable),
-                                                ...derivative.definitions
-                                                    .map((def) {
-                                                  return Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Text(
-                                                          '${def.definition} (${def.partOfSpeech})',
-                                                          style:
-                                                              const TextStyle(
-                                                                  fontSize:
-                                                                      20)),
-                                                      if (def.examples
-                                                          .isNotEmpty) ...[
-                                                        ...def.examples
-                                                            .map((example) {
-                                                          return Column(
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .start,
-                                                            children: [
-                                                              Text(example.bjn),
-                                                              Text(example.id),
-                                                            ],
-                                                          );
-                                                        }),
-                                                      ],
-                                                    ],
-                                                  );
-                                                }),
-                                              ],
-                                            ),
-                                          );
-                                        }),
-                                      ],
-                                    ),
-                                  )
                                 ],
                               );
                             }).toList();
                           }),
-                          Column(
+                          Container(
+                            padding: const EdgeInsets.all(16.0),
+                            decoration: BoxDecoration(
+                              color: Colors.blue.shade50,
+                              borderRadius: BorderRadius.circular(24),
+                            ),
+                            child: Column(
+                              crossAxisAlignment:
+                              CrossAxisAlignment.start,
+                              children: [
+                                const Text('Turunan',
+                                    style: TextStyle(fontSize: 20)),
+                                const SizedBox(height: 8),
+                                ...word.derivatives
+                                    .asMap()
+                                    .entries
+                                    .map((entry) {
+                                  final index = entry.key;
+                                  final derivative = entry.value;
+                                  return Container(
+                                    padding: const EdgeInsets.all(16.0),
+                                    margin: EdgeInsets.only(
+                                        bottom: index ==
+                                            word.derivatives
+                                                .length -
+                                                1
+                                            ? 0
+                                            : 16.0),
+                                    decoration: BoxDecoration(
+                                      color: Colors.blue.shade100,
+                                      borderRadius:
+                                      BorderRadius.circular(16),
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                      children: [
+                                        Text(
+                                          derivative.word,
+                                          style: const TextStyle(
+                                              fontSize: 24,
+                                              fontWeight:
+                                              FontWeight.w700),
+                                        ),
+                                        Text(derivative.syllable),
+                                        ...derivative.definitions
+                                            .map((def) {
+                                          return Column(
+                                            crossAxisAlignment:
+                                            CrossAxisAlignment
+                                                .start,
+                                            children: [
+                                              Text(
+                                                  '${def.definition} (${def.partOfSpeech})',
+                                                  style:
+                                                  const TextStyle(
+                                                      fontSize:
+                                                      20)),
+                                              if (def.examples
+                                                  .isNotEmpty) ...[
+                                                ...def.examples
+                                                    .map((example) {
+                                                  return Column(
+                                                    crossAxisAlignment:
+                                                    CrossAxisAlignment
+                                                        .start,
+                                                    children: [
+                                                      Text(example.bjn),
+                                                      Text(example.id),
+                                                    ],
+                                                  );
+                                                }),
+                                              ],
+                                            ],
+                                          );
+                                        }),
+                                      ],
+                                    ),
+                                  );
+                                }),
+                              ],
+                            ),
+                          ),
+                          debugMode ? Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const SizedBox(height: 40),
@@ -300,7 +301,7 @@ class _WordViewState extends State<WordView> {
                                 ),
                               ),
                             ],
-                          ),
+                          ) : const SizedBox(),
                         ],
                       ),
                     ),
