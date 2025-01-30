@@ -1,14 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kamus_banjar_mobile_app/model/word.dart';
 
 class WordDetailsMobile extends StatelessWidget {
   final Word word;
-
   const WordDetailsMobile({super.key, required this.word});
+
+  void _copyToClipboard(BuildContext context, String text) {
+    Clipboard.setData(ClipboardData(text: text)).then((_) {
+      Fluttertoast.showToast(
+        msg: "Kata disalin ke papan klip",
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 2,
+        backgroundColor: const Color.fromARGB(255, 72, 93, 112),
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    word.word = word.word
+        .split(' ')
+        .map((e) => e[0].toUpperCase() + e.substring(1).toLowerCase())
+        .join(' ');
     return Expanded(
       child: SingleChildScrollView(
         child: ConstrainedBox(
@@ -20,17 +39,26 @@ class WordDetailsMobile extends StatelessWidget {
                 Padding(
                   padding:
                       const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-                  child: Text(
-                    word.word
-                        .split(' ')
-                        .map((e) =>
-                            e[0].toUpperCase() + e.substring(1).toLowerCase())
-                        .join(' '),
-                    style: GoogleFonts.poppins().copyWith(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 32,
-                      // height: 1,
-                    ),
+                  child: Row(
+                    children: [
+                      Text(
+                        word.word,
+                        style: GoogleFonts.poppins().copyWith(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 32,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(width: 4),
+                      IconButton(
+                        icon: const Icon(Icons.content_copy),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 0, horizontal: 16),
+                        iconSize: 24,
+                        color: Colors.black26,
+                        onPressed: () => _copyToClipboard(context, word.word),
+                      ),
+                    ],
                   ),
                 ),
                 Padding(
@@ -108,6 +136,12 @@ class WordDetailsMobile extends StatelessWidget {
                           const SizedBox(height: 8),
                           ...word.derivatives.asMap().entries.map((entry) {
                             final derivative = entry.value;
+                            derivative.word = derivative.word
+                                .split(' ')
+                                .map((e) =>
+                                    e[0].toUpperCase() +
+                                    e.substring(1).toLowerCase())
+                                .join(' ');
                             return Container(
                               padding: const EdgeInsets.all(16),
                               margin: const EdgeInsets.only(bottom: 16),
@@ -119,11 +153,22 @@ class WordDetailsMobile extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
                                   if (derivative.word.isNotEmpty)
-                                    Text(
-                                      derivative.word,
-                                      style: const TextStyle(
-                                          fontSize: 24,
-                                          fontWeight: FontWeight.w700),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          derivative.word,
+                                          style: const TextStyle(
+                                              fontSize: 24,
+                                              fontWeight: FontWeight.w700),
+                                        ),
+                                        IconButton(
+                                          icon: const Icon(Icons.content_copy),
+                                          iconSize: 16,
+                                          color: Colors.black26,
+                                          onPressed: () => _copyToClipboard(
+                                              context, derivative.word),
+                                        ),
+                                      ],
                                     ),
                                   if (derivative.syllable.isNotEmpty)
                                     Text(derivative.syllable),
