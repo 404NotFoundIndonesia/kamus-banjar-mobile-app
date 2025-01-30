@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kamus_banjar_mobile_app/repository/dictionary_repository.dart';
+import 'package:kamus_banjar_mobile_app/view/custom_app_bar.dart';
 import 'package:kamus_banjar_mobile_app/view/words_view.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class AlphabetsView extends StatefulWidget {
   final DictionaryRepository dictionaryRepository;
@@ -27,42 +29,12 @@ class _AlphabetsViewState extends State<AlphabetsView> {
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
+    bool isClipped = MediaQuery.of(context).viewPadding.top == 0.0;
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 20.0),
-          child: Text(
-            "Kamus Banjar",
-            style: GoogleFonts.poppins().copyWith(
-              fontWeight: FontWeight.w600,
-              fontSize: 20,
-              color: Colors.black,
-            ),
-          ),
-        ),
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: const [
-                Color.fromARGB(255, 234, 249, 255),
-                Color.fromARGB(255, 219, 244, 255),
-                Colors.white
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              stops: [0, getStopValue(width, 50), getStopValue(width, 200)],
-            ),
-          ),
-        ),
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(1.0), // Height of the border
-          child: Container(
-            height: 1.0, // Border height
-            color: const Color.fromARGB(14, 0, 0, 0), // Border color
-          ),
-        ),
+      appBar: CustomAppBar(
+        title: "Kamus Banjar",
+        isClipped: isClipped,
+        showBackButton: false,
       ),
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -104,24 +76,19 @@ class _AlphabetsViewState extends State<AlphabetsView> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           const Icon(
-                            Icons
-                                .error_outline, // Adding an error icon to enhance the visual cue
+                            Icons.error_outline,
                             size: 40,
                             color: Colors.redAccent,
                           ),
-                          const SizedBox(
-                              height:
-                                  10), // Adding spacing between the icon and text
+                          const SizedBox(height: 10),
                           Text(
                             'Abjad Bahasa Banjar tidak ada!',
                             style: GoogleFonts.poppins().copyWith(
-                              fontSize:
-                                  14, // Slightly larger font size for better readability
+                              fontSize: 14,
                               fontWeight: FontWeight.w600,
                               color: Colors.black45,
                             ),
-                            textAlign:
-                                TextAlign.center, // Center align the text
+                            textAlign: TextAlign.center,
                           ),
                         ],
                       ),
@@ -141,17 +108,22 @@ class _AlphabetsViewState extends State<AlphabetsView> {
                         child: Card(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(32.0),
-                            side: const BorderSide(
-                              color: Colors.black12,
+                            side: BorderSide(
+                              color: total == 0
+                                  ? Colors.black12
+                                  : Colors.transparent,
                               width: 1,
                             ),
                           ),
                           elevation: 0,
-                          color: Colors.white,
+                          color: total == 0
+                              ? Colors.white
+                              : const Color.fromARGB(255, 237, 247, 255),
                           child: Container(
                             constraints: const BoxConstraints(
-                              maxWidth: 50,
-                              minHeight: 90,
+                              maxWidth: 60,
+                              minWidth: 60,
+                              minHeight: 115,
                             ),
                             padding: const EdgeInsets.all(8.0),
                             child: Center(
@@ -161,15 +133,19 @@ class _AlphabetsViewState extends State<AlphabetsView> {
                                   Text(
                                     letter.toUpperCase(),
                                     style: GoogleFonts.poppins().copyWith(
-                                      fontSize: 24,
+                                      fontSize: 32,
                                       fontWeight: FontWeight.bold,
                                       color: total == 0
                                           ? Colors.grey
-                                          : Colors.black,
+                                          : const Color.fromARGB(
+                                              255, 50, 116, 182),
                                     ),
                                   ),
-                                  const Divider(
-                                    color: Colors.black12,
+                                  Divider(
+                                    color: total == 0
+                                        ? Colors.black12
+                                        : const Color.fromARGB(
+                                            55, 25, 118, 210),
                                     thickness: 1,
                                     indent: 1,
                                     endIndent: 1,
@@ -178,11 +154,12 @@ class _AlphabetsViewState extends State<AlphabetsView> {
                                   Text(
                                     '$total',
                                     style: GoogleFonts.poppins().copyWith(
-                                      fontSize: 16,
+                                      fontSize: 20,
                                       fontWeight: FontWeight.w700,
                                       color: total == 0
                                           ? Colors.grey
-                                          : Colors.black,
+                                          : const Color.fromARGB(
+                                              255, 50, 116, 182),
                                     ),
                                   ),
                                 ],
@@ -190,15 +167,27 @@ class _AlphabetsViewState extends State<AlphabetsView> {
                             ),
                           ),
                         ),
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => WordsView(
-                              alphabet: letter,
-                              dictionaryRepository: widget.dictionaryRepository,
-                            ),
-                          ),
-                        ),
+                        onTap: () => total > 0
+                            ? Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => WordsView(
+                                    alphabet: letter,
+                                    dictionaryRepository:
+                                        widget.dictionaryRepository,
+                                  ),
+                                ),
+                              )
+                            : Fluttertoast.showToast(
+                                msg: "Kosakata belum tersedia di data server",
+                                toastLength: Toast.LENGTH_LONG,
+                                gravity: ToastGravity.BOTTOM,
+                                timeInSecForIosWeb: 2,
+                                backgroundColor:
+                                    const Color.fromARGB(255, 161, 75, 70),
+                                textColor: Colors.white,
+                                fontSize: 16.0,
+                              ),
                       );
                     }),
                   );

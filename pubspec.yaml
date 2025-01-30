@@ -38,6 +38,7 @@ dependencies:
   google_fonts: ^6.2.1
   http: ^1.2.1
   provider: ^6.1.2
+  fluttertoast: ^8.2.10
 
 dev_dependencies:
   flutter_launcher_icons: ^0.13.1
