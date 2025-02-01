@@ -39,6 +39,7 @@ dependencies:
   http: ^1.2.1
   provider: ^6.1.2
   fluttertoast: ^8.2.10
+  flutter_native_splash: ^2.4.4
 
 dev_dependencies:
   flutter_launcher_icons: "^0.14.3"
@@ -93,7 +94,19 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
-
+flutter_native_splash:
+  image: assets/icon/splash-icon.png
+  color: "#E4EFF9"
+  image_dark: assets/icon/splash-icon.png
+  color_dark: "#1A385B"
+  branding: assets/icon/branding.png
+  branding_dark: assets/icon/branding.png
+  android_12:
+    image: assets/icon/splash-icon.png
+    color: "#E4EFF9"
+    color_dark: "#1A385B"
+    branding: assets/icon/branding.png
+    branding_dark: assets/icon/branding-dark.png
 flutter_icons:
   android: true
   ios: true
