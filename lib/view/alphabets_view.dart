@@ -35,6 +35,8 @@ class _AlphabetsViewState extends State<AlphabetsView> {
         title: "Kamus Banjar",
         isClipped: isClipped,
         showBackButton: false,
+        showSavedButton: true,
+        dictionaryRepository: widget.dictionaryRepository,
       ),
       backgroundColor: Colors.white,
       body: SafeArea(

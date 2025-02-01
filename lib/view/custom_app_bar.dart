@@ -1,16 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:kamus_banjar_mobile_app/repository/dictionary_repository.dart';
+import 'package:kamus_banjar_mobile_app/view/saved_words_page.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final bool isClipped;
   final bool showBackButton;
+  final bool showSavedButton;
+  final DictionaryRepository dictionaryRepository;
 
   const CustomAppBar({
     super.key,
     required this.title,
     required this.isClipped,
     this.showBackButton = true,
+    this.showSavedButton = false,
+    required this.dictionaryRepository,
   });
 
   double getStopValue(double width, double value) {
@@ -61,6 +67,28 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                     child: IconButton(
                       icon: const Icon(Icons.arrow_back, color: Colors.black),
                       onPressed: () => Navigator.of(context).pop(),
+                    ),
+                  ),
+                )
+              : const SizedBox(),
+          showSavedButton
+              ? Align(
+                  alignment: Alignment.bottomRight,
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: IconButton(
+                      icon: const Icon(Icons.bookmark_outline),
+                      color: Colors.black,
+                      tooltip: "Brangkas Kata",
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SavedWordsPage(
+                                dictionaryRepository: dictionaryRepository),
+                          ),
+                        );
+                      },
                     ),
                   ),
                 )
