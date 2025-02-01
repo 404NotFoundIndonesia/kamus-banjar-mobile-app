@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kamus_banjar_mobile_app/model/word.dart';
+import 'package:kamus_banjar_mobile_app/utils/word_class_util.dart';
 
 class WordDetailsMobile extends StatelessWidget {
   final Word word;
@@ -80,7 +81,7 @@ class WordDetailsMobile extends StatelessWidget {
                               children: [
                                 if (def.definition.isNotEmpty)
                                   Text(
-                                    '${def.definition} (${def.partOfSpeech})',
+                                    '${def.definition} (${getWordClass(def.partOfSpeech)})',
                                     style: const TextStyle(fontSize: 20),
                                   ),
                                 if (def.examples.isNotEmpty)
@@ -180,7 +181,7 @@ class WordDetailsMobile extends StatelessWidget {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                            '${def.definition} (${def.partOfSpeech})',
+                                            '${def.definition} (${getWordClass(def.partOfSpeech)})',
                                             style:
                                                 const TextStyle(fontSize: 20)),
                                         if (def.examples.isNotEmpty) ...[
