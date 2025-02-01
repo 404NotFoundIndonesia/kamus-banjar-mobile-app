@@ -79,5 +79,5 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Size get preferredSize =>
-      Size.fromHeight(kToolbarHeight + (isClipped ? 24 : 0));
+      Size.fromHeight(kToolbarHeight + (isClipped ? 30 : 0));
 }

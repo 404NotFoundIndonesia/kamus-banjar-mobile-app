@@ -32,7 +32,7 @@ class WordDetailsMobile extends StatelessWidget {
       child: SingleChildScrollView(
         child: ConstrainedBox(
           constraints: BoxConstraints(
-              minHeight: MediaQuery.of(context).size.height - 80),
+              minHeight: MediaQuery.of(context).size.height - 86),
           child: IntrinsicHeight(
             child: Column(
               children: [
@@ -49,12 +49,12 @@ class WordDetailsMobile extends StatelessWidget {
                         ),
                         overflow: TextOverflow.ellipsis,
                       ),
-                      const SizedBox(width: 4),
+                      const SizedBox(width: 2),
                       IconButton(
                         icon: const Icon(Icons.content_copy),
                         padding: const EdgeInsets.symmetric(
-                            vertical: 0, horizontal: 16),
-                        iconSize: 24,
+                            vertical: 0, horizontal: 12),
+                        iconSize: 20,
                         color: Colors.black26,
                         onPressed: () => _copyToClipboard(context, word.word),
                       ),
@@ -132,7 +132,7 @@ class WordDetailsMobile extends StatelessWidget {
                           const SizedBox(height: 24),
                           const Text('Turunan',
                               style: TextStyle(
-                                  fontSize: 32, fontWeight: FontWeight.w700)),
+                                  fontSize: 24, fontWeight: FontWeight.w700)),
                           const SizedBox(height: 8),
                           ...word.derivatives.asMap().entries.map((entry) {
                             final derivative = entry.value;
@@ -163,8 +163,10 @@ class WordDetailsMobile extends StatelessWidget {
                                         ),
                                         IconButton(
                                           icon: const Icon(Icons.content_copy),
-                                          iconSize: 16,
+                                          iconSize: 20,
                                           color: Colors.black26,
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 0, horizontal: 12),
                                           onPressed: () => _copyToClipboard(
                                               context, derivative.word),
                                         ),
