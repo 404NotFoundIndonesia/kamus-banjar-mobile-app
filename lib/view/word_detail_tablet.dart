@@ -82,7 +82,7 @@ class WordDetailsTablet extends StatelessWidget {
                     ),
                     BookmarkButton(
                       word: word.word,
-                      category: 'Favorit', // Pass the category here
+                      category: 'Favorit',
                     ),
                   ],
                 ),
@@ -105,9 +105,31 @@ class WordDetailsTablet extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               if (def.definition.isNotEmpty)
-                                Text(
-                                  '${def.definition} (${getWordClass(def.partOfSpeech)})',
-                                  style: const TextStyle(fontSize: 20),
+                                Wrap(
+                                  children: [
+                                    Text(
+                                      def.definition,
+                                      style: const TextStyle(fontSize: 20),
+                                    ),
+                                    Container(
+                                      margin: const EdgeInsets.only(left: 8),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 12, vertical: 3),
+                                      decoration: BoxDecoration(
+                                        color: const Color.fromARGB(
+                                            255, 51, 163, 255),
+                                        borderRadius: BorderRadius.circular(24),
+                                      ),
+                                      child: Text(
+                                        getWordClass(def.partOfSpeech),
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               if (def.examples.isNotEmpty)
                                 Column(
@@ -208,7 +230,6 @@ class WordDetailsTablet extends StatelessWidget {
                                                         fontWeight:
                                                             FontWeight.w700),
                                                   ),
-                                                  // const SizedBox(width: 8),
                                                   IconButton(
                                                     icon: const Icon(
                                                         Icons.content_copy),

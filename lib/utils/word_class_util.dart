@@ -1,5 +1,3 @@
-// lib/utils/word_class_util.dart
-
 Map<String, String> wordClasses = {
   'n': 'nomina',
   'v': 'verba',

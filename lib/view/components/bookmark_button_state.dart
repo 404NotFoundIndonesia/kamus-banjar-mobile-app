@@ -22,7 +22,6 @@ class BookmarkButtonState extends State<BookmarkButton> {
     _checkIfWordSaved();
   }
 
-  // Function to check if the word is saved
   void _checkIfWordSaved() async {
     final isSaved =
         await savedWordsRepository.isWordSaved(widget.category, widget.word);
@@ -31,10 +30,8 @@ class BookmarkButtonState extends State<BookmarkButton> {
     });
   }
 
-  // Save or remove word function
   void _toggleWord() async {
     if (_isWordSaved) {
-      // Remove word if already saved
       await savedWordsRepository.removeWord(widget.category, widget.word);
       Fluttertoast.showToast(
         msg: "Kata dihapus dari favorit",
@@ -46,7 +43,6 @@ class BookmarkButtonState extends State<BookmarkButton> {
         fontSize: 16.0,
       );
     } else {
-      // Save word if not saved
       await savedWordsRepository.saveWord(widget.category, widget.word);
       Fluttertoast.showToast(
         msg: "Kata disimpan ke favorit",
@@ -58,7 +54,7 @@ class BookmarkButtonState extends State<BookmarkButton> {
         fontSize: 16.0,
       );
     }
-    _checkIfWordSaved(); // Re-check if the word is saved after the operation
+    _checkIfWordSaved();
   }
 
   @override
@@ -70,7 +66,7 @@ class BookmarkButtonState extends State<BookmarkButton> {
       padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
       iconSize: 24,
       color: Colors.black26,
-      onPressed: _toggleWord, // Toggle save/remove on press
+      onPressed: _toggleWord,
     );
   }
 }

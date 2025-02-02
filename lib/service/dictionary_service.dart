@@ -18,8 +18,7 @@ class DictionaryService {
       for (var letter in body['data']) {
         result.add({
           'letter': letter['letter'].toString(),
-          'total': letter['total'] ??
-              0, // Assuming 'total' can be null, so we set it to 0 if it's missing.
+          'total': letter['total'] ?? 0,
         });
       }
       return result;

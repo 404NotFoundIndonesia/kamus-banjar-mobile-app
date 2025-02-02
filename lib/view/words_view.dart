@@ -196,8 +196,7 @@ class _WordsViewState extends State<WordsView> {
                               ),
                             ),
                             Container(
-                              height:
-                                  24, // Adjust the height of the gradient container
+                              height: 24,
                               decoration: const BoxDecoration(
                                 gradient: LinearGradient(
                                   colors: [

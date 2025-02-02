@@ -117,7 +117,7 @@ class _SavedWordsPageState extends State<SavedWordsPage> {
                                       ),
                                     ),
                                   );
-                                  _loadSavedWords(); // Reload data when returning
+                                  _loadSavedWords();
                                 },
                                 child: Text(
                                   word

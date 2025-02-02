@@ -3,14 +3,13 @@ class Word {
   late String alphabet;
   late String syllable;
   late List<List<WordDefinition>> definitions;
-  late List<WordDerivative> derivatives; // Added derivatives property
+  late List<WordDerivative> derivatives;
 
   Word.fromJson(Map<String, dynamic> json) {
     word = json['word'];
     alphabet = json['alphabet'];
     syllable = json['syllables'] ?? '';
 
-    // Parsing definitions
     List<List<WordDefinition>> tempDefinitions = [];
     for (var meaning in json['meanings']) {
       List<WordDefinition> meaningDefinition = [];
@@ -21,7 +20,6 @@ class Word {
     }
     definitions = tempDefinitions;
 
-    // Parsing derivatives
     List<WordDerivative> tempDerivatives = [];
     for (var derivative in json['derivatives'] ?? []) {
       tempDerivatives.add(WordDerivative.fromJson(derivative));
