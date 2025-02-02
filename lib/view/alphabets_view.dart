@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kamus_banjar_mobile_app/repository/dictionary_repository.dart';
 import 'package:kamus_banjar_mobile_app/view/components/custom_app_bar.dart';
+import 'package:kamus_banjar_mobile_app/view/components/error_view.dart';
 import 'package:kamus_banjar_mobile_app/view/components/gradient_background.dart';
 import 'package:kamus_banjar_mobile_app/view/words_view.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -62,42 +63,13 @@ class _AlphabetsViewState extends State<AlphabetsView> {
                           ),
                         );
                       } else if (snapshot.hasError) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 60),
-                          child: Center(
-                            child: Text(
-                              'Error: ${snapshot.error}',
-                              style: GoogleFonts.poppins().copyWith(
-                                  fontSize: 12, color: Colors.redAccent),
-                            ),
-                          ),
-                        );
+                        return ErrorView(
+                            shortErrorMessage: 'Server tidak ditemukan!',
+                            detailedErrorMessage: snapshot.error.toString());
                       } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 60),
-                          child: Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Icon(
-                                  Icons.error_outline,
-                                  size: 40,
-                                  color: Colors.redAccent,
-                                ),
-                                const SizedBox(height: 10),
-                                Text(
-                                  'Abjad Bahasa Banjar tidak ada!',
-                                  style: GoogleFonts.poppins().copyWith(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.black45,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
+                        return const ErrorView(
+                            shortErrorMessage:
+                                'Abjad Bahasa Banjar tidak ada!');
                       } else {
                         final List<Map<String, dynamic>> alphabets =
                             snapshot.data!;

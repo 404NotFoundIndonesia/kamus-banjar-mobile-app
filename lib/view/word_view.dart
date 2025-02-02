@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kamus_banjar_mobile_app/model/word.dart';
 import 'package:kamus_banjar_mobile_app/repository/dictionary_repository.dart';
 import 'package:kamus_banjar_mobile_app/view/components/custom_app_bar.dart';
+import 'package:kamus_banjar_mobile_app/view/components/error_view.dart';
 import 'package:kamus_banjar_mobile_app/view/components/gradient_background.dart';
 import 'package:kamus_banjar_mobile_app/view/word_detail_mobile.dart';
 import 'package:kamus_banjar_mobile_app/view/word_detail_tablet.dart';
@@ -61,10 +62,14 @@ class _WordViewState extends State<WordView> {
                     ),
                   );
                 } else if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
+                  return ErrorView(
+                      shortErrorMessage:
+                          'Kosakata Bahasa Banjar tidak ditemukan!',
+                      detailedErrorMessage: snapshot.error.toString());
                 } else if (!snapshot.hasData) {
-                  return const Center(
-                      child: Text('Kosakata Bahasa Banjar tidak ditemukan!'));
+                  return const ErrorView(
+                      shortErrorMessage:
+                          'Kosakata Bahasa Banjar tidak ditemukan!');
                 } else {
                   final Word word = snapshot.data!;
                   return width > 600
