@@ -4,10 +4,14 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kamus_banjar_mobile_app/model/word.dart';
 import 'package:kamus_banjar_mobile_app/utils/word_class_util.dart';
+import 'package:kamus_banjar_mobile_app/utils/saved_words_repository.dart';
+import 'package:kamus_banjar_mobile_app/view/bookmark_button_state.dart';
 
 class WordDetailsTablet extends StatelessWidget {
   final Word word;
-  const WordDetailsTablet({super.key, required this.word});
+  WordDetailsTablet({super.key, required this.word});
+
+  final SavedWordsRepository savedWordsRepository = SavedWordsRepository();
 
   void _copyToClipboard(BuildContext context, String text) {
     Clipboard.setData(ClipboardData(text: text)).then((_) {
@@ -21,6 +25,22 @@ class WordDetailsTablet extends StatelessWidget {
         fontSize: 16.0,
       );
     });
+  }
+
+  Future<void> isWordSaved(String wordText) async {
+    final isSaved =
+        await savedWordsRepository.isWordSaved('default_category', wordText);
+    if (isSaved) {
+      Fluttertoast.showToast(
+        msg: "Kata sudah disimpan",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 2,
+        backgroundColor: const Color.fromARGB(255, 72, 93, 112),
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    }
   }
 
   @override
@@ -42,7 +62,7 @@ class WordDetailsTablet extends StatelessWidget {
                     const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
                 child: Row(
                   children: [
-                    SizedBox(width: word.derivatives.isNotEmpty ? 64 : 0),
+                    SizedBox(width: word.derivatives.isNotEmpty ? 96 : 0),
                     Text(
                       word.word,
                       style: GoogleFonts.poppins().copyWith(
@@ -51,14 +71,18 @@ class WordDetailsTablet extends StatelessWidget {
                       ),
                       overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(width: 4),
+                    const SizedBox(width: 12),
                     IconButton(
                       icon: const Icon(Icons.content_copy),
                       padding: const EdgeInsets.symmetric(
-                          vertical: 0, horizontal: 16),
+                          vertical: 0, horizontal: 0),
                       iconSize: 24,
                       color: Colors.black26,
                       onPressed: () => _copyToClipboard(context, word.word),
+                    ),
+                    BookmarkButton(
+                      word: word.word,
+                      category: 'Favorit', // Pass the category here
                     ),
                   ],
                 ),

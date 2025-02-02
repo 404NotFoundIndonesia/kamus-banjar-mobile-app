@@ -4,6 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kamus_banjar_mobile_app/model/word.dart';
 import 'package:kamus_banjar_mobile_app/utils/word_class_util.dart';
+import 'package:kamus_banjar_mobile_app/view/bookmark_button_state.dart';
 
 class WordDetailsMobile extends StatelessWidget {
   final Word word;
@@ -58,6 +59,10 @@ class WordDetailsMobile extends StatelessWidget {
                         iconSize: 20,
                         color: Colors.black26,
                         onPressed: () => _copyToClipboard(context, word.word),
+                      ),
+                      BookmarkButton(
+                        word: word.word,
+                        category: 'Favorit', // Pass the category here
                       ),
                     ],
                   ),

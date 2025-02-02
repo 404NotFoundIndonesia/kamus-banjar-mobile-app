@@ -1,25 +1,42 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 import 'package:kamus_banjar_mobile_app/repository/dictionary_repository.dart';
 import 'package:kamus_banjar_mobile_app/view/custom_app_bar.dart';
 import 'package:kamus_banjar_mobile_app/view/word_view.dart';
 
-class SavedWordsPage extends StatelessWidget {
-  final List<List<List<String>>> savedWords;
+class SavedWordsPage extends StatefulWidget {
   final DictionaryRepository dictionaryRepository;
-  const SavedWordsPage({
-    super.key,
-    required this.dictionaryRepository,
-    this.savedWords = const [
-      [
-        ['worse'],
-        ['abilis', 'bungul', 'tambuk']
-      ],
-      [
-        ['sopan'],
-        ['ulun', 'pian']
-      ],
-    ],
-  });
+  const SavedWordsPage({super.key, required this.dictionaryRepository});
+
+  @override
+  State<SavedWordsPage> createState() => _SavedWordsPageState();
+}
+
+class _SavedWordsPageState extends State<SavedWordsPage> {
+  List<List<List<String>>> savedWords = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSavedWords();
+  }
+
+  Future<void> _loadSavedWords() async {
+    final prefs = await SharedPreferences.getInstance();
+    final jsonString = prefs.getString('saved_words');
+    if (jsonString != null) {
+      setState(() {
+        savedWords = List<List<List<String>>>.from(
+          jsonDecode(jsonString).map(
+            (category) => List<List<String>>.from(
+              category.map((sublist) => List<String>.from(sublist)),
+            ),
+          ),
+        );
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,12 +45,20 @@ class SavedWordsPage extends StatelessWidget {
       appBar: CustomAppBar(
           title: "Brangkas Kata",
           isClipped: isClipped,
-          dictionaryRepository: dictionaryRepository),
+          dictionaryRepository: widget.dictionaryRepository),
       body: savedWords.isEmpty
           ? Container(
               color: Colors.white,
-              child:
-                  const Center(child: Text('Belum ada kata di dalam brangkas')))
+              child: const Center(
+                  child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('Belum ada kata di dalam brangkas'),
+                  Text(
+                      'Silakan tambah kata yang kalian sukai ke dalam brakngkas kata'),
+                ],
+              )))
           : Container(
               color: Colors.white,
               child: ListView.builder(
@@ -81,15 +106,19 @@ class SavedWordsPage extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(80),
                                 ),
                               ),
-                              onPressed: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => WordView(
-                                    dictionaryRepository: dictionaryRepository,
-                                    word: word,
+                              onPressed: () async {
+                                await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => WordView(
+                                      dictionaryRepository:
+                                          widget.dictionaryRepository,
+                                      word: word,
+                                    ),
                                   ),
-                                ),
-                              ),
+                                );
+                                _loadSavedWords(); // Reload data when returning
+                              },
                               child: Text(
                                 word
                                     .split(' ')
