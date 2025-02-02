@@ -45,6 +45,7 @@ class WordDetailsTablet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    int index = 0;
     word.word = word.word
         .split(' ')
         .map((e) => e[0].toUpperCase() + e.substring(1).toLowerCase())
@@ -100,10 +101,12 @@ class WordDetailsTablet extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       ...word.definitions.expand((meaning) {
+                        index += 1;
                         return meaning.map((def) {
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              if (index > 1) const SizedBox(height: 8),
                               if (def.definition.isNotEmpty)
                                 Wrap(
                                   children: [
@@ -148,6 +151,7 @@ class WordDetailsTablet extends StatelessWidget {
                                     }),
                                   ],
                                 ),
+                              const SizedBox(height: 8)
                             ],
                           );
                         }).toList();

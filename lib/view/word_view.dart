@@ -45,32 +45,34 @@ class _WordViewState extends State<WordView> {
       body: Stack(
         children: [
           const GradientBackground(),
-          FutureBuilder<Word>(
-            future: word,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Align(
-                  alignment: Alignment.topCenter,
-                  child: Padding(
-                    padding: EdgeInsets.only(top: 40),
-                    child: CircularProgressIndicator(
-                      color: Color.fromARGB(113, 33, 149, 243),
-                      backgroundColor: Color.fromARGB(41, 33, 149, 243),
+          SafeArea(
+            child: FutureBuilder<Word>(
+              future: word,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Align(
+                    alignment: Alignment.topCenter,
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 40),
+                      child: CircularProgressIndicator(
+                        color: Color.fromARGB(113, 33, 149, 243),
+                        backgroundColor: Color.fromARGB(41, 33, 149, 243),
+                      ),
                     ),
-                  ),
-                );
-              } else if (snapshot.hasError) {
-                return Center(child: Text('Error: ${snapshot.error}'));
-              } else if (!snapshot.hasData) {
-                return const Center(
-                    child: Text('Kosakata Bahasa Banjar tidak ditemukan!'));
-              } else {
-                final Word word = snapshot.data!;
-                return width > 600
-                    ? WordDetailsTablet(word: word)
-                    : WordDetailsMobile(word: word);
-              }
-            },
+                  );
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else if (!snapshot.hasData) {
+                  return const Center(
+                      child: Text('Kosakata Bahasa Banjar tidak ditemukan!'));
+                } else {
+                  final Word word = snapshot.data!;
+                  return width > 600
+                      ? WordDetailsTablet(word: word)
+                      : WordDetailsMobile(word: word);
+                }
+              },
+            ),
           ),
         ],
       ),

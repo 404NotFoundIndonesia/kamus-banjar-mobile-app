@@ -69,7 +69,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                         borderRadius: BorderRadius.circular(20),
                       ),
                       margin: const EdgeInsets.only(left: 8),
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 2),
                       child: Text(
                         subtitle,
                         style: GoogleFonts.poppins().copyWith(
@@ -84,47 +85,54 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             ),
           ),
           canPop && showBackButton
-              ? Align(
-                  alignment: Alignment.bottomLeft,
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 8),
-                    child: IconButton(
-                      icon: const Icon(Icons.arrow_back, color: Colors.black),
-                      onPressed: () => Navigator.of(context).pop(),
+              ? SafeArea(
+                  top: false,
+                  child: Align(
+                    alignment: Alignment.bottomLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: IconButton(
+                        icon: const Icon(Icons.arrow_back, color: Colors.black),
+                        onPressed: () => Navigator.of(context).pop(),
+                      ),
                     ),
                   ),
                 )
               : const SizedBox(),
           showSavedButton
-              ? Align(
-                  alignment: Alignment.bottomRight,
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 8),
-                    child: IconButton(
-                      icon: const Icon(Icons.bookmark_outline),
-                      color: Colors.black,
-                      tooltip: "Markah",
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => SavedWordsPage(
-                                dictionaryRepository: dictionaryRepository),
-                          ),
-                        );
-                      },
+              ? SafeArea(
+                  top: false,
+                  child: Align(
+                    alignment: Alignment.bottomRight,
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: IconButton(
+                        icon: const Icon(Icons.bookmark_outline),
+                        color: Colors.black,
+                        tooltip: "Markah",
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SavedWordsPage(
+                                  dictionaryRepository: dictionaryRepository),
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   ),
                 )
               : const SizedBox(),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(height: 1, width: width, color: Colors.black12),
+          ),
         ],
       ),
-      bottom: PreferredSize(
-        preferredSize: const Size.fromHeight(1.0),
-        child: Container(
-          height: 1.0,
-          color: Colors.black12,
-        ),
+      bottom: const PreferredSize(
+        preferredSize: Size.fromHeight(1.0),
+        child: SizedBox(),
       ),
     );
   }
