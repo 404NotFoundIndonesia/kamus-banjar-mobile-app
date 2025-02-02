@@ -126,8 +126,7 @@ class ErrorViewState extends State<ErrorView> {
                   ),
                 ],
                 const SizedBox(height: 16),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                Wrap(
                   children: [
                     TextButton.icon(
                       onPressed: _toggleDetailedMessage,
