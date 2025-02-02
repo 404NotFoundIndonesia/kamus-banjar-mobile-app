@@ -5,6 +5,7 @@ import 'package:kamus_banjar_mobile_app/view/saved_words_page.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
+  final String subtitle;
   final bool isClipped;
   final bool showBackButton;
   final bool showSavedButton;
@@ -13,6 +14,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomAppBar({
     super.key,
     required this.title,
+    this.subtitle = '',
     required this.isClipped,
     this.showBackButton = true,
     this.showSavedButton = false,
@@ -49,13 +51,35 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             alignment: Alignment.bottomCenter,
             child: Padding(
               padding: const EdgeInsets.only(bottom: 16),
-              child: Text(
-                title,
-                style: GoogleFonts.poppins().copyWith(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 20,
-                  color: Colors.black,
-                ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    title,
+                    style: GoogleFonts.poppins().copyWith(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 20,
+                      color: Colors.black,
+                    ),
+                  ),
+                  if (subtitle != '')
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.blue,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      margin: const EdgeInsets.only(left: 8),
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      child: Text(
+                        subtitle,
+                        style: GoogleFonts.poppins().copyWith(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 18,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                ],
               ),
             ),
           ),
@@ -79,7 +103,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                     child: IconButton(
                       icon: const Icon(Icons.bookmark_outline),
                       color: Colors.black,
-                      tooltip: "Brangkas Kata",
+                      tooltip: "Markah",
                       onPressed: () {
                         Navigator.push(
                           context,

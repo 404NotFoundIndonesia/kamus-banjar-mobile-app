@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:kamus_banjar_mobile_app/model/word.dart';
 import 'package:kamus_banjar_mobile_app/repository/dictionary_repository.dart';
-import 'package:kamus_banjar_mobile_app/view/custom_app_bar.dart';
+import 'package:kamus_banjar_mobile_app/view/components/custom_app_bar.dart';
+import 'package:kamus_banjar_mobile_app/view/components/gradient_background.dart';
 import 'package:kamus_banjar_mobile_app/view/word_detail_mobile.dart';
 import 'package:kamus_banjar_mobile_app/view/word_detail_tablet.dart';
 
@@ -37,35 +38,41 @@ class _WordViewState extends State<WordView> {
     return Scaffold(
       appBar: CustomAppBar(
           title: "Kamus Banjar",
+          subtitle: widget.word,
           isClipped: isClipped,
           dictionaryRepository: widget.dictionaryRepository),
       backgroundColor: Colors.white,
-      body: FutureBuilder<Word>(
-        future: word,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Align(
-              alignment: Alignment.topCenter,
-              child: Padding(
-                padding: EdgeInsets.only(top: 40),
-                child: CircularProgressIndicator(
-                  color: Color.fromARGB(113, 33, 149, 243),
-                  backgroundColor: Color.fromARGB(41, 33, 149, 243),
-                ),
-              ),
-            );
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData) {
-            return const Center(
-                child: Text('Kosakata Bahasa Banjar tidak ditemukan!'));
-          } else {
-            final Word word = snapshot.data!;
-            return width > 600
-                ? WordDetailsTablet(word: word)
-                : WordDetailsMobile(word: word);
-          }
-        },
+      body: Stack(
+        children: [
+          const GradientBackground(),
+          FutureBuilder<Word>(
+            future: word,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Align(
+                  alignment: Alignment.topCenter,
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 40),
+                    child: CircularProgressIndicator(
+                      color: Color.fromARGB(113, 33, 149, 243),
+                      backgroundColor: Color.fromARGB(41, 33, 149, 243),
+                    ),
+                  ),
+                );
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              } else if (!snapshot.hasData) {
+                return const Center(
+                    child: Text('Kosakata Bahasa Banjar tidak ditemukan!'));
+              } else {
+                final Word word = snapshot.data!;
+                return width > 600
+                    ? WordDetailsTablet(word: word)
+                    : WordDetailsMobile(word: word);
+              }
+            },
+          ),
+        ],
       ),
     );
   }

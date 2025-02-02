@@ -5,7 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:kamus_banjar_mobile_app/model/word.dart';
 import 'package:kamus_banjar_mobile_app/utils/word_class_util.dart';
 import 'package:kamus_banjar_mobile_app/utils/saved_words_repository.dart';
-import 'package:kamus_banjar_mobile_app/view/bookmark_button_state.dart';
+import 'package:kamus_banjar_mobile_app/view/components/bookmark_button_state.dart';
 
 class WordDetailsTablet extends StatelessWidget {
   final Word word;
