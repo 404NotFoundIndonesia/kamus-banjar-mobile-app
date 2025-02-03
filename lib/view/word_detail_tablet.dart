@@ -110,12 +110,14 @@ class WordDetailsTablet extends StatelessWidget {
                               if (def.definition.isNotEmpty)
                                 Wrap(
                                   children: [
-                                    Text(
-                                      def.definition,
-                                      style: const TextStyle(fontSize: 20),
+                                    Padding(
+                                      padding: const EdgeInsets.only(right: 8),
+                                      child: Text(
+                                        def.definition,
+                                        style: const TextStyle(fontSize: 20),
+                                      ),
                                     ),
                                     Container(
-                                      margin: const EdgeInsets.only(left: 8),
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 12, vertical: 3),
                                       decoration: BoxDecoration(
@@ -254,10 +256,46 @@ class WordDetailsTablet extends StatelessWidget {
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
                                                 children: [
-                                                  Text(
-                                                      '${def.definition} (${getWordClass(def.partOfSpeech)})',
-                                                      style: const TextStyle(
-                                                          fontSize: 20)),
+                                                  Wrap(
+                                                    children: [
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .only(right: 8),
+                                                        child: Text(
+                                                            def.definition,
+                                                            style:
+                                                                const TextStyle(
+                                                                    fontSize:
+                                                                        20)),
+                                                      ),
+                                                      Container(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .symmetric(
+                                                                horizontal: 12,
+                                                                vertical: 3),
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: Colors.orange,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(24),
+                                                        ),
+                                                        child: Text(
+                                                          getWordClass(
+                                                              def.partOfSpeech),
+                                                          style:
+                                                              const TextStyle(
+                                                            fontSize: 16,
+                                                            color: Colors.white,
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
                                                   if (def
                                                       .examples.isNotEmpty) ...[
                                                     ...def.examples
