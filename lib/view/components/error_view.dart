@@ -20,11 +20,9 @@ class ErrorView extends StatefulWidget {
 class ErrorViewState extends State<ErrorView> {
   bool _isDetailedMessageVisible = false;
 
-  // Function to copy the error message to the clipboard
   void _copyToClipboard() {
     Clipboard.setData(ClipboardData(text: widget.detailedErrorMessage));
 
-    // Show the toast message after copying the content
     Fluttertoast.showToast(
       msg: "Pesan kesalahan telah disalin ke clipboard!",
       toastLength: Toast.LENGTH_LONG,
@@ -42,15 +40,12 @@ class ErrorViewState extends State<ErrorView> {
     });
   }
 
-  // Function to launch URL in the default browser
   Future<void> _launchGitHubRepo() async {
     final Uri url = Uri.parse(
         'https://github.com/404NotFoundIndonesia/kamus-banjar-mobile-app/issues');
     try {
       if (await canLaunchUrl(url)) {
-        await launchUrl(url,
-            mode:
-                LaunchMode.externalApplication); // Open in the default browser
+        await launchUrl(url, mode: LaunchMode.externalApplication);
       } else {
         Fluttertoast.showToast(
           msg: "Tidak dapat membuka $url",

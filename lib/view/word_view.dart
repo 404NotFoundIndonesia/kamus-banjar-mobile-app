@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:kamus_banjar_mobile_app/model/word.dart';
 import 'package:kamus_banjar_mobile_app/repository/dictionary_repository.dart';
 import 'package:kamus_banjar_mobile_app/view/components/custom_app_bar.dart';
@@ -20,12 +21,18 @@ class WordView extends StatefulWidget {
 
 class _WordViewState extends State<WordView> {
   late Future<Word> word;
-  bool debugMode = false;
 
   @override
   void initState() {
     super.initState();
     word = widget.dictionaryRepository.getWord(widget.word);
+
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        systemNavigationBarColor: Colors.orange,
+        systemNavigationBarIconBrightness: Brightness.light,
+      ),
+    );
   }
 
   double getStopValue(double width, double pixelValue) {
@@ -47,6 +54,7 @@ class _WordViewState extends State<WordView> {
         children: [
           const GradientBackground(),
           SafeArea(
+            bottom: false,
             child: FutureBuilder<Word>(
               future: word,
               builder: (context, snapshot) {
