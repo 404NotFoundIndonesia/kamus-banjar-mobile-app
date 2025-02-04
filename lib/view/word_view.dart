@@ -26,13 +26,6 @@ class _WordViewState extends State<WordView> {
   void initState() {
     super.initState();
     word = widget.dictionaryRepository.getWord(widget.word);
-
-    SystemChrome.setSystemUIOverlayStyle(
-      const SystemUiOverlayStyle(
-        systemNavigationBarColor: Colors.orange,
-        systemNavigationBarIconBrightness: Brightness.light,
-      ),
-    );
   }
 
   double getStopValue(double width, double pixelValue) {

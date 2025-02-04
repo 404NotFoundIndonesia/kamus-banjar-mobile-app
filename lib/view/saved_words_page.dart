@@ -52,16 +52,24 @@ class _SavedWordsPageState extends State<SavedWordsPage> {
           const GradientBackground(),
           SafeArea(
             child: savedWords.isEmpty
-                ? const Center(
-                    child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text('Belum ada kata di dalam brangkas'),
-                      Text(
-                          'Silakan tambah kata yang kalian sukai ke dalam brakngkas kata'),
-                    ],
-                  ))
+                ? const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Center(
+                        child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Belum ada kata di dalam markah',
+                          textAlign: TextAlign.center,
+                        ),
+                        Text(
+                          'Silakan tambah kata yang kalian sukai ke dalam markah',
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    )),
+                  )
                 : ListView.builder(
                     itemCount: savedWords.length,
                     padding: const EdgeInsets.all(12),
