@@ -9,8 +9,13 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 class AlphabetsView extends StatefulWidget {
   final DictionaryRepository dictionaryRepository;
+  final Widget? pageToRefresh;
 
-  const AlphabetsView({super.key, required this.dictionaryRepository});
+  const AlphabetsView({
+    super.key,
+    required this.dictionaryRepository,
+    this.pageToRefresh,
+  });
 
   @override
   State<AlphabetsView> createState() => _AlphabetsViewState();
@@ -64,12 +69,20 @@ class _AlphabetsViewState extends State<AlphabetsView> {
                         );
                       } else if (snapshot.hasError) {
                         return ErrorView(
+                            pageToRefresh: widget.pageToRefresh ??
+                                AlphabetsView(
+                                    dictionaryRepository:
+                                        widget.dictionaryRepository),
                             shortErrorMessage: 'Server tidak ditemukan!',
                             detailedErrorMessage: snapshot.error.toString());
                       } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                        return const ErrorView(
-                            shortErrorMessage:
-                                'Abjad Bahasa Banjar tidak ada!');
+                        return ErrorView(
+                          shortErrorMessage: 'Abjad Bahasa Banjar tidak ada!',
+                          pageToRefresh: widget.pageToRefresh ??
+                              AlphabetsView(
+                                  dictionaryRepository:
+                                      widget.dictionaryRepository),
+                        );
                       } else {
                         final List<Map<String, dynamic>> alphabets =
                             snapshot.data!;

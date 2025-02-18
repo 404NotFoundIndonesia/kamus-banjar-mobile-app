@@ -27,6 +27,35 @@ class WordDetailsTablet extends StatelessWidget {
     });
   }
 
+  TextSpan _highlightWord(String text, String targets) {
+    List<TextSpan> spans = [];
+    List<String> targetList = targets.split(';').map((e) => e.trim()).toList();
+    if (targetList.isEmpty) {
+      return TextSpan(text: text);
+    }
+    String pattern = targetList.map(RegExp.escape).join('|');
+    RegExp regExp = RegExp(pattern, caseSensitive: false);
+    Iterable<RegExpMatch> matches = regExp.allMatches(text);
+    int lastMatchEnd = 0;
+    for (RegExpMatch match in matches) {
+      if (match.start > lastMatchEnd) {
+        spans.add(TextSpan(text: text.substring(lastMatchEnd, match.start)));
+      }
+      String matchedWord = match.group(0) ?? '';
+      spans.add(
+        TextSpan(
+          text: matchedWord.toLowerCase(),
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+      );
+      lastMatchEnd = match.end;
+    }
+    if (lastMatchEnd < text.length) {
+      spans.add(TextSpan(text: text.substring(lastMatchEnd)));
+    }
+    return TextSpan(children: spans);
+  }
+
   Future<void> isWordSaved(String wordText) async {
     final isSaved =
         await savedWordsRepository.isWordSaved('default_category', wordText);
@@ -53,15 +82,12 @@ class WordDetailsTablet extends StatelessWidget {
     return Row(
       children: [
         Column(
-          crossAxisAlignment: (word.derivatives.isNotEmpty)
-              ? CrossAxisAlignment.center
-              : CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
               child: Row(
                 children: [
-                  SizedBox(width: word.derivatives.isNotEmpty ? 96 : 0),
                   Text(
                     word.word,
                     style: GoogleFonts.poppins().copyWith(
@@ -70,12 +96,12 @@ class WordDetailsTablet extends StatelessWidget {
                     ),
                     overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(width: 12),
+                  const SizedBox(width: 16),
                   IconButton(
                     icon: const Icon(Icons.content_copy),
                     padding:
                         const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
-                    iconSize: 24,
+                    iconSize: 20,
                     color: Colors.black26,
                     onPressed: () => _copyToClipboard(context, word.word),
                   ),
@@ -91,7 +117,7 @@ class WordDetailsTablet extends StatelessWidget {
               child: Container(
                 width: MediaQuery.of(context).size.width * 0.5 - 50,
                 constraints: const BoxConstraints(maxWidth: 400),
-                padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
                 decoration: BoxDecoration(
                   color: const Color.fromARGB(255, 219, 239, 255),
                   borderRadius: BorderRadius.circular(24),
@@ -145,8 +171,40 @@ class WordDetailsTablet extends StatelessWidget {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Text(example.bjn),
-                                        Text(example.id),
+                                        Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            const Text(
+                                              '[bjn] ',
+                                              style: TextStyle(
+                                                  fontFamily: "monospace"),
+                                            ),
+                                            Expanded(
+                                              child: Text.rich(
+                                                _highlightWord(
+                                                    example.bjn, word.word),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            const Text(
+                                              '[id]  ',
+                                              style: TextStyle(
+                                                  fontFamily: "monospace"),
+                                            ),
+                                            Expanded(
+                                              child: Text.rich(
+                                                _highlightWord(
+                                                    example.id, def.definition),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ],
                                     );
                                   }),
@@ -182,13 +240,7 @@ class WordDetailsTablet extends StatelessWidget {
                       ),
                       child: Column(
                         children: [
-                          const SizedBox(height: 4),
-                          const SizedBox(
-                            height: 0,
-                            child: Icon(Icons.more_horiz,
-                                size: 24, color: Colors.black45),
-                          ),
-                          const SizedBox(height: 32),
+                          const SizedBox(height: 12),
                           const Text('Turunan',
                               style: TextStyle(
                                   fontSize: 24, fontWeight: FontWeight.w700)),
@@ -233,18 +285,23 @@ class WordDetailsTablet extends StatelessWidget {
                                                       fontWeight:
                                                           FontWeight.w700),
                                                 ),
-                                                SizedBox(
-                                                  height: 32,
-                                                  width: 32,
-                                                  child: IconButton(
-                                                    icon: const Icon(
-                                                        Icons.content_copy),
-                                                    iconSize: 16,
-                                                    color: Colors.black26,
-                                                    onPressed: () =>
-                                                        _copyToClipboard(
-                                                            context,
-                                                            derivative.word),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          top: 2),
+                                                  child: SizedBox(
+                                                    height: 32,
+                                                    width: 32,
+                                                    child: IconButton(
+                                                      icon: const Icon(
+                                                          Icons.content_copy),
+                                                      iconSize: 16,
+                                                      color: Colors.black26,
+                                                      onPressed: () =>
+                                                          _copyToClipboard(
+                                                              context,
+                                                              derivative.word),
+                                                    ),
                                                   ),
                                                 ),
                                               ],
@@ -270,10 +327,12 @@ class WordDetailsTablet extends StatelessWidget {
                                                                       20)),
                                                     ),
                                                     Container(
+                                                      margin:
+                                                          const EdgeInsets.only(
+                                                              top: 3),
                                                       padding: const EdgeInsets
-                                                          .symmetric(
-                                                          horizontal: 12,
-                                                          vertical: 3),
+                                                          .fromLTRB(
+                                                          12, 0, 12, 2),
                                                       decoration: BoxDecoration(
                                                         color: Colors.orange,
                                                         borderRadius:
@@ -302,8 +361,49 @@ class WordDetailsTablet extends StatelessWidget {
                                                           CrossAxisAlignment
                                                               .start,
                                                       children: [
-                                                        Text(example.bjn),
-                                                        Text(example.id),
+                                                        const SizedBox(
+                                                            height: 8),
+                                                        Row(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            const Text(
+                                                              '[bjn] ',
+                                                              style: TextStyle(
+                                                                  fontFamily:
+                                                                      "monospace"),
+                                                            ),
+                                                            Expanded(
+                                                              child: Text.rich(
+                                                                _highlightWord(
+                                                                    example.bjn,
+                                                                    derivative
+                                                                        .word),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        Row(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            const Text(
+                                                              '[id]  ',
+                                                              style: TextStyle(
+                                                                  fontFamily:
+                                                                      "monospace"),
+                                                            ),
+                                                            Expanded(
+                                                              child: Text.rich(
+                                                                _highlightWord(
+                                                                    example.id,
+                                                                    def.definition),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
                                                       ],
                                                     );
                                                   }),

@@ -109,10 +109,18 @@ class _WordsViewState extends State<WordsView> {
                         );
                       } else if (snapshot.hasError) {
                         return ErrorView(
+                            pageToRefresh: WordsView(
+                              alphabet: widget.alphabet,
+                              dictionaryRepository: widget.dictionaryRepository,
+                            ),
                             shortErrorMessage: 'Server tidak ditemukan!',
                             detailedErrorMessage: snapshot.error.toString());
                       } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                        return const ErrorView(
+                        return ErrorView(
+                            pageToRefresh: WordsView(
+                              alphabet: widget.alphabet,
+                              dictionaryRepository: widget.dictionaryRepository,
+                            ),
                             shortErrorMessage:
                                 'Kosakata Bahasa Banjar tidak ditemukan!');
                       } else {

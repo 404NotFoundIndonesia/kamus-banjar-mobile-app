@@ -24,6 +24,35 @@ class WordDetailsMobile extends StatelessWidget {
     });
   }
 
+  TextSpan _highlightWord(String text, String targets) {
+    List<TextSpan> spans = [];
+    List<String> targetList = targets.split(';').map((e) => e.trim()).toList();
+    if (targetList.isEmpty) {
+      return TextSpan(text: text);
+    }
+    String pattern = targetList.map(RegExp.escape).join('|');
+    RegExp regExp = RegExp(pattern, caseSensitive: false);
+    Iterable<RegExpMatch> matches = regExp.allMatches(text);
+    int lastMatchEnd = 0;
+    for (RegExpMatch match in matches) {
+      if (match.start > lastMatchEnd) {
+        spans.add(TextSpan(text: text.substring(lastMatchEnd, match.start)));
+      }
+      String matchedWord = match.group(0) ?? '';
+      spans.add(
+        TextSpan(
+          text: matchedWord.toLowerCase(),
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+      );
+      lastMatchEnd = match.end;
+    }
+    if (lastMatchEnd < text.length) {
+      spans.add(TextSpan(text: text.substring(lastMatchEnd)));
+    }
+    return TextSpan(children: spans);
+  }
+
   @override
   Widget build(BuildContext context) {
     int index = 0;
@@ -40,17 +69,18 @@ class WordDetailsMobile extends StatelessWidget {
             child: Column(
               children: [
                 Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+                  padding: const EdgeInsets.fromLTRB(24, 16, 8, 16),
                   child: Row(
                     children: [
-                      Text(
-                        word.word,
-                        style: GoogleFonts.poppins().copyWith(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 32,
+                      Expanded(
+                        child: Text(
+                          word.word,
+                          style: GoogleFonts.poppins().copyWith(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 32,
+                          ),
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        overflow: TextOverflow.ellipsis,
                       ),
                       const SizedBox(width: 2),
                       IconButton(
@@ -129,8 +159,40 @@ class WordDetailsMobile extends StatelessWidget {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            Text(example.bjn),
-                                            Text(example.id),
+                                            Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                const Text(
+                                                  '[bjn] ',
+                                                  style: TextStyle(
+                                                      fontFamily: "monospace"),
+                                                ),
+                                                Expanded(
+                                                  child: Text.rich(
+                                                    _highlightWord(
+                                                        example.bjn, word.word),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                const Text(
+                                                  '[id]  ',
+                                                  style: TextStyle(
+                                                      fontFamily: "monospace"),
+                                                ),
+                                                Expanded(
+                                                  child: Text.rich(
+                                                    _highlightWord(example.id,
+                                                        def.definition),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
                                           ],
                                         );
                                       }),
@@ -158,13 +220,7 @@ class WordDetailsMobile extends StatelessWidget {
                       ),
                       child: Column(
                         children: [
-                          const SizedBox(height: 4),
-                          const SizedBox(
-                            height: 0,
-                            child: Icon(Icons.more_horiz,
-                                size: 24, color: Colors.black45),
-                          ),
-                          const SizedBox(height: 24),
+                          const SizedBox(height: 12),
                           const Text('Turunan',
                               style: TextStyle(
                                   fontSize: 24, fontWeight: FontWeight.w700)),
@@ -192,7 +248,7 @@ class WordDetailsMobile extends StatelessWidget {
                                       children: [
                                         Padding(
                                           padding:
-                                              const EdgeInsets.only(right: 8),
+                                              const EdgeInsets.only(right: 4),
                                           child: Text(
                                             derivative.word,
                                             style: const TextStyle(
@@ -202,14 +258,12 @@ class WordDetailsMobile extends StatelessWidget {
                                         ),
                                         SizedBox(
                                           height: 36,
-                                          width: 48,
+                                          width: 36,
                                           child: IconButton(
                                             icon:
                                                 const Icon(Icons.content_copy),
                                             iconSize: 20,
                                             color: Colors.black26,
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 0, horizontal: 12),
                                             onPressed: () => _copyToClipboard(
                                                 context, derivative.word),
                                           ),
@@ -233,10 +287,12 @@ class WordDetailsMobile extends StatelessWidget {
                                                       fontSize: 20)),
                                             ),
                                             Container(
+                                              margin:
+                                                  const EdgeInsets.only(top: 3),
                                               padding:
                                                   const EdgeInsets.symmetric(
                                                       horizontal: 12,
-                                                      vertical: 3),
+                                                      vertical: 1),
                                               decoration: BoxDecoration(
                                                 color: Colors.orange,
                                                 borderRadius:
@@ -259,8 +315,45 @@ class WordDetailsMobile extends StatelessWidget {
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
                                               children: [
-                                                Text(example.bjn),
-                                                Text(example.id),
+                                                const SizedBox(height: 8),
+                                                Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    const Text(
+                                                      '[bjn] ',
+                                                      style: TextStyle(
+                                                          fontFamily:
+                                                              "monospace"),
+                                                    ),
+                                                    Expanded(
+                                                      child: Text.rich(
+                                                        _highlightWord(
+                                                            example.bjn,
+                                                            derivative.word),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    const Text(
+                                                      '[id]  ',
+                                                      style: TextStyle(
+                                                          fontFamily:
+                                                              "monospace"),
+                                                    ),
+                                                    Expanded(
+                                                      child: Text.rich(
+                                                        _highlightWord(
+                                                            example.id,
+                                                            def.definition),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
                                               ],
                                             );
                                           }),

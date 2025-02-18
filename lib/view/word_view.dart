@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:kamus_banjar_mobile_app/model/word.dart';
 import 'package:kamus_banjar_mobile_app/repository/dictionary_repository.dart';
 import 'package:kamus_banjar_mobile_app/view/components/custom_app_bar.dart';
@@ -64,11 +63,19 @@ class _WordViewState extends State<WordView> {
                   );
                 } else if (snapshot.hasError) {
                   return ErrorView(
+                      pageToRefresh: WordView(
+                        word: widget.word,
+                        dictionaryRepository: widget.dictionaryRepository,
+                      ),
                       shortErrorMessage:
                           'Kosakata Bahasa Banjar tidak ditemukan!',
                       detailedErrorMessage: snapshot.error.toString());
                 } else if (!snapshot.hasData) {
-                  return const ErrorView(
+                  return ErrorView(
+                      pageToRefresh: WordView(
+                        word: widget.word,
+                        dictionaryRepository: widget.dictionaryRepository,
+                      ),
                       shortErrorMessage:
                           'Kosakata Bahasa Banjar tidak ditemukan!');
                 } else {

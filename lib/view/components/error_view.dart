@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ErrorView extends StatefulWidget {
   final String shortErrorMessage;
   final String detailedErrorMessage;
+  final Widget pageToRefresh;
 
   const ErrorView({
     super.key,
     required this.shortErrorMessage,
     this.detailedErrorMessage = '',
+    required this.pageToRefresh,
   });
 
   @override
@@ -51,7 +53,7 @@ class ErrorViewState extends State<ErrorView> {
           msg: "Tidak dapat membuka $url",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
-          backgroundColor: Colors.red,
+          backgroundColor: Colors.blue,
           textColor: Colors.white,
           fontSize: 16.0,
         );
@@ -61,7 +63,7 @@ class ErrorViewState extends State<ErrorView> {
         msg: "Terjadi kesalahan: $e",
         toastLength: Toast.LENGTH_LONG,
         gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.red,
+        backgroundColor: Colors.blue,
         textColor: Colors.white,
         fontSize: 16.0,
       );
@@ -75,9 +77,9 @@ class ErrorViewState extends State<ErrorView> {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: const Color.fromARGB(255, 255, 235, 235),
+          color: const Color.fromARGB(255, 224, 235, 245),
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: Colors.red, width: 2),
+          border: Border.all(color: Colors.blue, width: 2),
         ),
         child: SingleChildScrollView(
           child: Center(
@@ -87,7 +89,7 @@ class ErrorViewState extends State<ErrorView> {
               children: [
                 const Icon(
                   Icons.error_outline,
-                  color: Colors.red,
+                  color: Colors.blue,
                   size: 60,
                 ),
                 const SizedBox(height: 16),
@@ -97,7 +99,7 @@ class ErrorViewState extends State<ErrorView> {
                   style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: Colors.red,
+                    color: Colors.blue,
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -107,16 +109,16 @@ class ErrorViewState extends State<ErrorView> {
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       fontSize: 14,
-                      color: Colors.redAccent,
+                      color: Colors.black,
                     ),
                   ),
                   const SizedBox(height: 8),
                   TextButton.icon(
                     onPressed: _copyToClipboard,
-                    icon: const Icon(Icons.copy, color: Colors.red),
+                    icon: const Icon(Icons.copy, color: Colors.blue),
                     label: const Text(
                       'Salin ke Clipboard',
-                      style: TextStyle(color: Colors.red),
+                      style: TextStyle(color: Colors.blue),
                     ),
                   ),
                 ],
@@ -129,21 +131,35 @@ class ErrorViewState extends State<ErrorView> {
                         _isDetailedMessageVisible
                             ? Icons.visibility_off
                             : Icons.visibility,
-                        color: Colors.red,
+                        color: Colors.blue,
                       ),
                       label: Text(
                         _isDetailedMessageVisible
                             ? 'Sembunyikan Detail'
                             : 'Tampilkan Detail',
-                        style: const TextStyle(color: Colors.red),
+                        style: const TextStyle(color: Colors.blue),
                       ),
                     ),
                     TextButton.icon(
                       onPressed: _launchGitHubRepo,
-                      icon: const Icon(Icons.link, color: Colors.red),
+                      icon: const Icon(Icons.link, color: Colors.blue),
                       label: const Text(
                         'Laporkan ke Github',
-                        style: TextStyle(color: Colors.red),
+                        style: TextStyle(color: Colors.blue),
+                      ),
+                    ),
+                    TextButton.icon(
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => widget.pageToRefresh),
+                        );
+                      },
+                      icon: const Icon(Icons.refresh, color: Colors.blue),
+                      label: const Text(
+                        'Muat Ulang',
+                        style: TextStyle(color: Colors.blue),
                       ),
                     ),
                   ],
