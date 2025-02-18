@@ -39,6 +39,7 @@ class _AlphabetsViewState extends State<AlphabetsView> {
         isClipped: isClipped,
         showBackButton: false,
         showSavedButton: true,
+        showMoreButton: true,
         dictionaryRepository: widget.dictionaryRepository,
       ),
       backgroundColor: Colors.white,

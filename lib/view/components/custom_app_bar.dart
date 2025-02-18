@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kamus_banjar_mobile_app/repository/dictionary_repository.dart';
+import 'package:kamus_banjar_mobile_app/view/info_view.dart';
 import 'package:kamus_banjar_mobile_app/view/saved_words_page.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -9,6 +10,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool isClipped;
   final bool showBackButton;
   final bool showSavedButton;
+  final bool showMoreButton;
   final DictionaryRepository dictionaryRepository;
 
   const CustomAppBar({
@@ -18,6 +20,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     required this.isClipped,
     this.showBackButton = true,
     this.showSavedButton = false,
+    this.showMoreButton = false,
     required this.dictionaryRepository,
   });
 
@@ -99,6 +102,29 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   ),
                 )
               : const SizedBox(),
+          showMoreButton
+              ? SafeArea(
+                  top: false,
+                  child: Align(
+                    alignment: Alignment.bottomLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: IconButton(
+                        icon: Icon(Icons.info_rounded, color: Colors.blue[700]),
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => InfoView(
+                                  dictionaryRepository: dictionaryRepository,
+                                ),
+                              ));
+                        },
+                      ),
+                    ),
+                  ),
+                )
+              : const SizedBox(),
           showSavedButton
               ? SafeArea(
                   top: false,
@@ -107,8 +133,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                     child: Padding(
                       padding: const EdgeInsets.only(bottom: 8),
                       child: IconButton(
-                        icon: const Icon(Icons.bookmark_outline),
-                        color: Colors.black,
+                        icon: const Icon(Icons.bookmark),
+                        color: Colors.blue[700],
                         tooltip: "Markah",
                         onPressed: () {
                           Navigator.push(
