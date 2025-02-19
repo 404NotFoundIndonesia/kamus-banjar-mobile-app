@@ -6,6 +6,7 @@ import 'package:kamus_banjar_mobile_app/model/word.dart';
 import 'package:kamus_banjar_mobile_app/utils/word_class_util.dart';
 import 'package:kamus_banjar_mobile_app/utils/saved_words_repository.dart';
 import 'package:kamus_banjar_mobile_app/view/components/bookmark_button_state.dart';
+import 'package:kamus_banjar_mobile_app/view/word_type_view.dart';
 
 class WordDetailsTablet extends StatelessWidget {
   final Word word;
@@ -142,20 +143,31 @@ class WordDetailsTablet extends StatelessWidget {
                                       style: const TextStyle(fontSize: 20),
                                     ),
                                   ),
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 12, vertical: 3),
-                                    decoration: BoxDecoration(
-                                      color: const Color.fromARGB(
-                                          255, 51, 163, 255),
-                                      borderRadius: BorderRadius.circular(24),
-                                    ),
-                                    child: Text(
-                                      getWordClass(def.partOfSpeech),
-                                      style: const TextStyle(
-                                        fontSize: 16,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w600,
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              const WordTypeView(),
+                                        ),
+                                      );
+                                    },
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 12, vertical: 3),
+                                      decoration: BoxDecoration(
+                                        color: const Color.fromARGB(
+                                            255, 51, 163, 255),
+                                        borderRadius: BorderRadius.circular(24),
+                                      ),
+                                      child: Text(
+                                        getWordClass(def.partOfSpeech),
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w600,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -331,32 +343,48 @@ class WordDetailsTablet extends StatelessWidget {
                                                                     fontSize:
                                                                         20)),
                                                       ),
-                                                      Container(
-                                                        margin: const EdgeInsets
-                                                            .only(top: 3),
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .fromLTRB(
-                                                                12, 0, 12, 2),
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color: Colors.orange,
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(24),
-                                                        ),
-                                                        child: Text(
-                                                          getWordClass(
-                                                              def.partOfSpeech),
-                                                          style:
-                                                              const TextStyle(
-                                                            fontSize: 16,
-                                                            color: Colors.white,
-                                                            fontWeight:
-                                                                FontWeight.w600,
+                                                      GestureDetector(
+                                                        onTap: () {
+                                                          Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  const WordTypeView(),
+                                                            ),
+                                                          );
+                                                        },
+                                                        child: Container(
+                                                          margin:
+                                                              const EdgeInsets
+                                                                  .only(top: 3),
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .fromLTRB(
+                                                                  12, 0, 12, 2),
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color:
+                                                                Colors.orange,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        24),
+                                                          ),
+                                                          child: Text(
+                                                            getWordClass(def
+                                                                .partOfSpeech),
+                                                            style:
+                                                                const TextStyle(
+                                                              fontSize: 16,
+                                                              color:
+                                                                  Colors.white,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600,
+                                                            ),
                                                           ),
                                                         ),
-                                                      ),
+                                                      )
                                                     ],
                                                   ),
                                                   if (def
