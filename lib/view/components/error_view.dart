@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ErrorView extends StatefulWidget {
@@ -77,9 +78,8 @@ class ErrorViewState extends State<ErrorView> {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: const Color.fromARGB(255, 224, 235, 245),
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: Colors.blue, width: 2),
+          border: Border.all(color: Colors.grey.shade300, width: 1),
         ),
         child: SingleChildScrollView(
           child: Center(
@@ -87,45 +87,89 @@ class ErrorViewState extends State<ErrorView> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                const Icon(
-                  Icons.error_outline,
-                  color: Colors.blue,
-                  size: 60,
-                ),
                 const SizedBox(height: 16),
                 Text(
                   widget.shortErrorMessage,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
+                  style: GoogleFonts.poppins().copyWith(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: Colors.blue,
+                    color: Colors.black,
                   ),
                 ),
                 const SizedBox(height: 8),
                 if (_isDetailedMessageVisible) ...[
                   Text(
                     widget.detailedErrorMessage,
-                    textAlign: TextAlign.center,
+                    textAlign: TextAlign.start,
                     style: const TextStyle(
                       fontSize: 14,
                       color: Colors.black,
                     ),
                   ),
                   const SizedBox(height: 8),
-                  TextButton.icon(
-                    onPressed: _copyToClipboard,
-                    icon: const Icon(Icons.copy, color: Colors.blue),
-                    label: const Text(
-                      'Salin ke Clipboard',
-                      style: TextStyle(color: Colors.blue),
-                    ),
+                  Wrap(
+                    spacing: 4,
+                    alignment: WrapAlignment.center,
+                    children: [
+                      OutlinedButton.icon(
+                        onPressed: _copyToClipboard,
+                        icon: const Icon(Icons.copy, color: Colors.blue),
+                        label: const Text(
+                          'Salin ke Clipboard',
+                          style: TextStyle(color: Colors.blue),
+                        ),
+                        style: OutlinedButton.styleFrom(
+                          backgroundColor:
+                              Colors.blue.shade50, // Light background
+                          side: const BorderSide(
+                              color: Colors.blue), // Border color
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(32),
+                          ),
+                        ),
+                      ),
+                      OutlinedButton.icon(
+                        onPressed: _launchGitHubRepo,
+                        icon: const Icon(Icons.link, color: Colors.blue),
+                        label: const Text(
+                          'Laporkan ke Github',
+                          style: TextStyle(color: Colors.blue),
+                        ),
+                        style: OutlinedButton.styleFrom(
+                          backgroundColor:
+                              Colors.blue.shade50, // Light background
+                          side: const BorderSide(
+                              color: Colors.blue), // Border color
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(32),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
+                  Container(
+                    width: double.infinity,
+                    margin: const EdgeInsets.symmetric(vertical: 8),
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          color: Colors.grey.shade300, // Border color
+                          width: 1, // Border thickness
+                        ),
+                      ),
+                    ),
+                  )
                 ],
-                const SizedBox(height: 16),
                 Wrap(
+                  spacing: 4,
+                  alignment: WrapAlignment.center,
                   children: [
-                    TextButton.icon(
+                    OutlinedButton.icon(
                       onPressed: _toggleDetailedMessage,
                       icon: Icon(
                         _isDetailedMessageVisible
@@ -139,27 +183,42 @@ class ErrorViewState extends State<ErrorView> {
                             : 'Tampilkan Detail',
                         style: const TextStyle(color: Colors.blue),
                       ),
-                    ),
-                    TextButton.icon(
-                      onPressed: _launchGitHubRepo,
-                      icon: const Icon(Icons.link, color: Colors.blue),
-                      label: const Text(
-                        'Laporkan ke Github',
-                        style: TextStyle(color: Colors.blue),
+                      style: OutlinedButton.styleFrom(
+                        backgroundColor:
+                            Colors.blue.shade50, // Light background
+                        side: const BorderSide(
+                            color: Colors.blue), // Border color
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(32),
+                        ),
                       ),
                     ),
-                    TextButton.icon(
+                    OutlinedButton.icon(
                       onPressed: () {
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => widget.pageToRefresh),
+                            builder: (context) => widget.pageToRefresh,
+                          ),
                         );
                       },
                       icon: const Icon(Icons.refresh, color: Colors.blue),
                       label: const Text(
                         'Muat Ulang',
                         style: TextStyle(color: Colors.blue),
+                      ),
+                      style: OutlinedButton.styleFrom(
+                        backgroundColor:
+                            Colors.blue.shade50, // Light background
+                        side: const BorderSide(
+                            color: Colors.blue), // Border color
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(32),
+                        ),
                       ),
                     ),
                   ],
