@@ -105,52 +105,70 @@ class WordTypeView extends StatelessWidget {
                     const Text(
                       "Memahami berbagai kelas kata dalam bahasa Indonesia sangat penting untuk meningkatkan kualitas tulisan dan komunikasi. Berikut adalah penjelasan formal mengenai 11 jenis kelas kata beserta contohnya",
                     ),
+                    const SizedBox(height: 8),
                     Column(
-                      children: kelasKata.entries.map((entry) {
-                        return Container(
+                      children: [
+                        SizedBox(
                           width: double.infinity,
-                          padding: const EdgeInsets.only(bottom: 12.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                entry.key,
-                                style: GoogleFonts.poppins().copyWith(
-                                    fontSize: 18, fontWeight: FontWeight.w600),
-                              ),
-                              const SizedBox(height: 4),
-                              ...entry.value["deskripsi"]
-                                  .map<Widget>((text) => Text(text))
-                                  .toList(),
-                              const SizedBox(height: 4),
-                              const Text("Contoh:",
-                                  style:
-                                      TextStyle(fontWeight: FontWeight.bold)),
-                              Wrap(
-                                spacing: 8.0,
-                                children: entry.value["contoh"]
-                                    .map<Widget>(
-                                      (example) => Chip(
-                                        label: Text(
-                                          example,
-                                          style: TextStyle(
-                                              color: Colors.blue.shade600),
-                                        ),
-                                        backgroundColor: Colors.blue.shade50,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(32.0),
-                                          side: const BorderSide(
-                                              color: Colors.transparent),
-                                        ),
+                          child: Wrap(
+                            spacing: 16,
+                            runSpacing: 16,
+                            children: kelasKata.entries.map((entry) {
+                              return SizedBox(
+                                width: MediaQuery.of(context).size.width /
+                                        ((MediaQuery.of(context).size.width /
+                                                240)
+                                            .floor()) -
+                                    32,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      entry.key,
+                                      style: GoogleFonts.poppins().copyWith(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w600,
                                       ),
-                                    )
-                                    .toList(),
-                              ),
-                            ],
+                                    ),
+                                    const SizedBox(height: 4),
+                                    ...entry.value["deskripsi"]
+                                        .map<Widget>((text) => Text(text))
+                                        .toList(),
+                                    const SizedBox(height: 4),
+                                    const Text("Contoh:",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold)),
+                                    Wrap(
+                                      spacing: 4,
+                                      children: entry.value["contoh"]
+                                          .map<Widget>(
+                                            (example) => Chip(
+                                              label: Text(
+                                                example,
+                                                style: TextStyle(
+                                                    color:
+                                                        Colors.blue.shade600),
+                                              ),
+                                              backgroundColor:
+                                                  Colors.blue.shade50,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(32.0),
+                                                side: const BorderSide(
+                                                    color: Colors.transparent),
+                                              ),
+                                            ),
+                                          )
+                                          .toList(),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }).toList(),
                           ),
-                        );
-                      }).toList(),
+                        ),
+                      ],
                     ),
                     TextButton.icon(
                       onPressed: () => _openlink(

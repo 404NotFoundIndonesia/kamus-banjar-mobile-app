@@ -79,8 +79,9 @@ class _SavedWordsPageState extends State<SavedWordsPage> {
 
                       return Container(
                         decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 219, 239, 255),
-                          borderRadius: BorderRadius.circular(20),
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: Colors.grey.shade300),
                         ),
                         margin: const EdgeInsets.symmetric(vertical: 8),
                         padding: const EdgeInsets.all(16),
