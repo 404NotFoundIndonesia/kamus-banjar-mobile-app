@@ -210,7 +210,7 @@ class WordDetailsMobile extends StatelessWidget {
                 if (word.derivatives.isNotEmpty)
                   Expanded(
                     child: Container(
-                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                       decoration: const BoxDecoration(
                         color: Color.fromARGB(255, 255, 218, 138),
                         borderRadius: BorderRadius.only(
