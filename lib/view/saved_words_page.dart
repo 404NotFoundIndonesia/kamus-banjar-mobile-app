@@ -44,9 +44,9 @@ class _SavedWordsPageState extends State<SavedWordsPage> {
     bool isClipped = MediaQuery.of(context).viewPadding.top == 0.0;
     return Scaffold(
       appBar: CustomAppBar(
-          title: "Markah",
-          isClipped: isClipped,
-          dictionaryRepository: widget.dictionaryRepository),
+        title: "Markah",
+        isClipped: isClipped,
+      ),
       body: Stack(
         children: [
           const GradientBackground(),

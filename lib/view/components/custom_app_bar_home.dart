@@ -1,23 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:kamus_banjar_mobile_app/repository/dictionary_repository.dart';
 import 'package:kamus_banjar_mobile_app/view/info_view.dart';
+import 'package:kamus_banjar_mobile_app/view/saved_words_page.dart';
 
-class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
+class CustomAppBarHome extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final String subtitle;
   final bool isClipped;
-  final bool showBackButton;
-  final bool showSavedButton;
-  final bool showMoreButton;
+  final DictionaryRepository dictionaryRepository;
 
-  const CustomAppBar({
+  const CustomAppBarHome({
     super.key,
     required this.title,
     this.subtitle = '',
     required this.isClipped,
-    this.showBackButton = true,
-    this.showSavedButton = false,
-    this.showMoreButton = false,
+    required this.dictionaryRepository,
   });
 
   double getStopValue(double width, double value) {
@@ -27,8 +25,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    bool canPop = Navigator.of(context).canPop();
-
     return AppBar(
       automaticallyImplyLeading: false,
       flexibleSpace: Stack(
@@ -62,7 +58,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                       color: Colors.black,
                     ),
                   ),
-                  if (subtitle.isNotEmpty)
+                  if (subtitle != '')
                     Container(
                       decoration: BoxDecoration(
                         color: Colors.blue,
@@ -84,43 +80,50 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               ),
             ),
           ),
-          if (canPop && showBackButton)
-            SafeArea(
-              top: false,
-              child: Align(
-                alignment: Alignment.bottomLeft,
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 8),
-                  child: IconButton(
-                    icon: const Icon(Icons.arrow_back, color: Colors.black),
-                    onPressed: () => Navigator.of(context).pop(),
-                  ),
-                ),
-              ),
-            ),
-          if (showMoreButton)
-            SafeArea(
-              top: false,
-              child: Align(
-                alignment: Alignment.bottomLeft,
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 8),
-                  child: IconButton(
-                    icon: const Icon(Icons.subject),
-                    color: Colors.black,
-                    tooltip: "Tentang",
-                    onPressed: () {
-                      Navigator.push(
+          SafeArea(
+            top: false,
+            child: Align(
+              alignment: Alignment.bottomLeft,
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: IconButton(
+                  icon: const Icon(Icons.subject),
+                  color: Colors.black,
+                  tooltip: "Tentang",
+                  onPressed: () {
+                    Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => const InfoView(),
-                        ),
-                      );
-                    },
-                  ),
+                        ));
+                  },
                 ),
               ),
             ),
+          ),
+          SafeArea(
+            top: false,
+            child: Align(
+              alignment: Alignment.bottomRight,
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: IconButton(
+                  icon: const Icon(Icons.bookmark_outline),
+                  color: Colors.black,
+                  tooltip: "Markah",
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SavedWordsPage(
+                            dictionaryRepository: dictionaryRepository),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+          ),
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(height: 1, width: width, color: Colors.black12),

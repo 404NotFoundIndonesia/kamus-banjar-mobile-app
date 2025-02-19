@@ -37,10 +37,10 @@ class _WordViewState extends State<WordView> {
     bool isClipped = MediaQuery.of(context).viewPadding.top == 0.0;
     return Scaffold(
       appBar: CustomAppBar(
-          title: "Kamus Banjar",
-          subtitle: widget.word,
-          isClipped: isClipped,
-          dictionaryRepository: widget.dictionaryRepository),
+        title: "Kamus Banjar",
+        subtitle: widget.word,
+        isClipped: isClipped,
+      ),
       backgroundColor: Colors.white,
       body: Stack(
         children: [
