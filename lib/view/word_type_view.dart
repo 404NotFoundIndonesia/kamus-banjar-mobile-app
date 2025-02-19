@@ -148,7 +148,7 @@ class WordTypeView extends StatelessWidget {
                                                 example,
                                                 style: TextStyle(
                                                     color:
-                                                        Colors.blue.shade600),
+                                                        Colors.blue.shade700),
                                               ),
                                               backgroundColor:
                                                   Colors.blue.shade50,
@@ -170,12 +170,19 @@ class WordTypeView extends StatelessWidget {
                         ),
                       ],
                     ),
+                    Text(
+                      "Links",
+                      style: GoogleFonts.poppins().copyWith(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                     TextButton.icon(
                       onPressed: () => _openlink(
                           "https://penerbitdeepublish.com/kelas-kata/"),
                       icon: Icon(Icons.link, color: Colors.blue.shade700),
                       label: Text(
-                        'Referensi',
+                        'Sumber Referensi',
                         style: TextStyle(
                           color: Colors.blue.shade700,
                           fontWeight: FontWeight.w600,
