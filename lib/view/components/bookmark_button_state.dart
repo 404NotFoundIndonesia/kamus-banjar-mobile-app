@@ -49,6 +49,13 @@ class BookmarkButtonState extends State<BookmarkButton> {
     }
   }
 
+  String toTitleCase(String text) {
+    return text.split(' ').map((word) {
+      if (word.isEmpty) return word;
+      return "${word[0].toUpperCase()}${word.substring(1).toLowerCase()}";
+    }).join(' ');
+  }
+
   void _showCategoryInputDialog() {
     TextEditingController categoryController = TextEditingController();
 
@@ -68,12 +75,13 @@ class BookmarkButtonState extends State<BookmarkButton> {
             ),
             TextButton(
               onPressed: () async {
-                String category = categoryController.text.trim();
+                String category = categoryController.text.trim().toLowerCase();
                 if (category.isNotEmpty) {
                   Navigator.pop(context);
                   await savedWordsRepository.saveWord(category, widget.word);
                   Fluttertoast.showToast(
-                    msg: "Kata disimpan ke ${categoryController.text.trim()}",
+                    msg:
+                        "Kata disimpan ke ${toTitleCase(categoryController.text.trim())}",
                     toastLength: Toast.LENGTH_SHORT,
                     gravity: ToastGravity.BOTTOM,
                     timeInSecForIosWeb: 2,
