@@ -250,233 +250,266 @@ class WordDetailsTablet extends StatelessWidget {
                           const Text('Turunan',
                               style: TextStyle(
                                   fontSize: 24, fontWeight: FontWeight.w700)),
-                          const SizedBox(height: 8),
                           Flexible(
                             child: SafeArea(
-                              child: SingleChildScrollView(
-                                child: Column(
-                                  children: [
-                                    const SizedBox(height: 8),
-                                    ...word.derivatives
-                                        .asMap()
-                                        .entries
-                                        .map((entry) {
-                                      final derivative = entry.value;
-                                      derivative.word = derivative.word
-                                          .split(' ')
-                                          .map((e) =>
-                                              e[0].toUpperCase() +
-                                              e.substring(1).toLowerCase())
-                                          .join(' ');
-                                      return Container(
-                                        width: double.infinity,
-                                        padding: const EdgeInsets.fromLTRB(
-                                            16, 8, 16, 16),
-                                        margin:
-                                            const EdgeInsets.only(bottom: 16),
-                                        decoration: BoxDecoration(
-                                          color: const Color.fromARGB(
-                                              255, 255, 243, 192),
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                        ),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.stretch,
-                                          children: [
-                                            if (derivative.word.isNotEmpty)
-                                              Wrap(
-                                                children: [
-                                                  Text(
-                                                    derivative.word,
-                                                    style: const TextStyle(
-                                                        fontSize: 24,
-                                                        fontWeight:
-                                                            FontWeight.w700),
-                                                  ),
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            top: 2),
-                                                    child: SizedBox(
-                                                      height: 32,
-                                                      width: 32,
-                                                      child: IconButton(
-                                                        icon: const Icon(Icons
-                                                            .volume_up_outlined),
-                                                        padding:
-                                                            EdgeInsets.zero,
-                                                        iconSize: 20,
-                                                        color: Colors.black26,
-                                                        onPressed: () => _speak(
-                                                            derivative.syllable
-                                                                    .isNotEmpty
-                                                                ? derivative
-                                                                    .syllable
-                                                                    .replaceAll(
-                                                                        '.',
-                                                                        ' ')
-                                                                : derivative
-                                                                    .word),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            top: 2),
-                                                    child: SizedBox(
-                                                      height: 32,
-                                                      width: 32,
-                                                      child: IconButton(
-                                                        icon: const Icon(
-                                                            Icons.content_copy),
-                                                        iconSize: 16,
-                                                        color: Colors.black26,
-                                                        onPressed: () =>
-                                                            _copyToClipboard(
-                                                                context,
-                                                                derivative
-                                                                    .word),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
+                              child: Stack(
+                                children: [
+                                  SingleChildScrollView(
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(top: 16),
+                                      child: Column(
+                                        children: [
+                                          ...word.derivatives
+                                              .asMap()
+                                              .entries
+                                              .map((entry) {
+                                            final derivative = entry.value;
+                                            derivative.word = derivative.word
+                                                .split(' ')
+                                                .map((e) =>
+                                                    e[0].toUpperCase() +
+                                                    e
+                                                        .substring(1)
+                                                        .toLowerCase())
+                                                .join(' ');
+                                            return Container(
+                                              width: double.infinity,
+                                              padding:
+                                                  const EdgeInsets.fromLTRB(
+                                                      16, 8, 16, 16),
+                                              margin: const EdgeInsets.only(
+                                                  bottom: 16),
+                                              decoration: BoxDecoration(
+                                                color: const Color.fromARGB(
+                                                    255, 255, 243, 192),
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
                                               ),
-                                            if (derivative.syllable.isNotEmpty)
-                                              Text(derivative.syllable),
-                                            ...derivative.definitions
-                                                .map((def) {
-                                              return Column(
+                                              child: Column(
                                                 crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
+                                                    CrossAxisAlignment.stretch,
                                                 children: [
-                                                  Wrap(
-                                                    children: [
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .only(right: 8),
-                                                        child: Text(
-                                                            def.definition,
-                                                            style:
-                                                                const TextStyle(
-                                                                    fontSize:
-                                                                        20)),
-                                                      ),
-                                                      GestureDetector(
-                                                        onTap: () {
-                                                          Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                              builder: (context) =>
-                                                                  const WordTypeView(),
-                                                            ),
-                                                          );
-                                                        },
-                                                        child: Container(
-                                                          margin:
-                                                              const EdgeInsets
-                                                                  .only(top: 3),
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .fromLTRB(
-                                                                  12, 0, 12, 2),
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color:
-                                                                Colors.orange,
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        24),
-                                                          ),
-                                                          child: Text(
-                                                            getWordClass(def
-                                                                .partOfSpeech),
-                                                            style:
-                                                                const TextStyle(
-                                                              fontSize: 16,
-                                                              color:
-                                                                  Colors.white,
+                                                  if (derivative
+                                                      .word.isNotEmpty)
+                                                    Wrap(
+                                                      children: [
+                                                        Text(
+                                                          derivative.word,
+                                                          style: const TextStyle(
+                                                              fontSize: 24,
                                                               fontWeight:
                                                                   FontWeight
-                                                                      .w600,
+                                                                      .w700),
+                                                        ),
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .only(top: 2),
+                                                          child: SizedBox(
+                                                            height: 32,
+                                                            width: 32,
+                                                            child: IconButton(
+                                                              icon: const Icon(Icons
+                                                                  .volume_up_outlined),
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .zero,
+                                                              iconSize: 20,
+                                                              color: Colors
+                                                                  .black26,
+                                                              onPressed: () => _speak(derivative
+                                                                      .syllable
+                                                                      .isNotEmpty
+                                                                  ? derivative
+                                                                      .syllable
+                                                                      .replaceAll(
+                                                                          '.',
+                                                                          ' ')
+                                                                  : derivative
+                                                                      .word),
                                                             ),
                                                           ),
                                                         ),
-                                                      )
-                                                    ],
-                                                  ),
-                                                  if (def
-                                                      .examples.isNotEmpty) ...[
-                                                    ...def.examples
-                                                        .map((example) {
-                                                      return Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          const SizedBox(
-                                                              height: 8),
-                                                          Row(
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .start,
-                                                            children: [
-                                                              const Text(
-                                                                '[bjn] ',
-                                                                style: TextStyle(
-                                                                    fontFamily:
-                                                                        "monospace"),
-                                                              ),
-                                                              Expanded(
-                                                                child:
-                                                                    Text.rich(
-                                                                  _highlightWord(
-                                                                      example
-                                                                          .bjn,
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .only(top: 2),
+                                                          child: SizedBox(
+                                                            height: 32,
+                                                            width: 32,
+                                                            child: IconButton(
+                                                              icon: const Icon(Icons
+                                                                  .content_copy),
+                                                              iconSize: 16,
+                                                              color: Colors
+                                                                  .black26,
+                                                              onPressed: () =>
+                                                                  _copyToClipboard(
+                                                                      context,
                                                                       derivative
                                                                           .word),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  if (derivative
+                                                      .syllable.isNotEmpty)
+                                                    Text(derivative.syllable),
+                                                  ...derivative.definitions
+                                                      .map((def) {
+                                                    return Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Wrap(
+                                                          children: [
+                                                            Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .only(
+                                                                      right: 8),
+                                                              child: Text(
+                                                                  def
+                                                                      .definition,
+                                                                  style: const TextStyle(
+                                                                      fontSize:
+                                                                          20)),
+                                                            ),
+                                                            GestureDetector(
+                                                              onTap: () {
+                                                                Navigator.push(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                    builder:
+                                                                        (context) =>
+                                                                            const WordTypeView(),
+                                                                  ),
+                                                                );
+                                                              },
+                                                              child: Container(
+                                                                margin:
+                                                                    const EdgeInsets
+                                                                        .only(
+                                                                        top: 3),
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                        .fromLTRB(
+                                                                        12,
+                                                                        0,
+                                                                        12,
+                                                                        2),
+                                                                decoration:
+                                                                    BoxDecoration(
+                                                                  color: Colors
+                                                                      .orange,
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              24),
+                                                                ),
+                                                                child: Text(
+                                                                  getWordClass(def
+                                                                      .partOfSpeech),
+                                                                  style:
+                                                                      const TextStyle(
+                                                                    fontSize:
+                                                                        16,
+                                                                    color: Colors
+                                                                        .white,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w600,
+                                                                  ),
                                                                 ),
                                                               ),
-                                                            ],
-                                                          ),
-                                                          Row(
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .start,
-                                                            children: [
-                                                              const Text(
-                                                                '[id]  ',
-                                                                style: TextStyle(
-                                                                    fontFamily:
-                                                                        "monospace"),
-                                                              ),
-                                                              Expanded(
-                                                                child:
-                                                                    Text.rich(
-                                                                  _highlightWord(
-                                                                      example
-                                                                          .id,
-                                                                      def.definition),
+                                                            )
+                                                          ],
+                                                        ),
+                                                        if (def.examples
+                                                            .isNotEmpty) ...[
+                                                          ...def.examples
+                                                              .map((example) {
+                                                            return Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                const SizedBox(
+                                                                    height: 8),
+                                                                Row(
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .start,
+                                                                  children: [
+                                                                    const Text(
+                                                                      '[bjn] ',
+                                                                      style: TextStyle(
+                                                                          fontFamily:
+                                                                              "monospace"),
+                                                                    ),
+                                                                    Expanded(
+                                                                      child: Text
+                                                                          .rich(
+                                                                        _highlightWord(
+                                                                            example.bjn,
+                                                                            derivative.word),
+                                                                      ),
+                                                                    ),
+                                                                  ],
                                                                 ),
-                                                              ),
-                                                            ],
-                                                          ),
+                                                                Row(
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .start,
+                                                                  children: [
+                                                                    const Text(
+                                                                      '[id]  ',
+                                                                      style: TextStyle(
+                                                                          fontFamily:
+                                                                              "monospace"),
+                                                                    ),
+                                                                    Expanded(
+                                                                      child: Text
+                                                                          .rich(
+                                                                        _highlightWord(
+                                                                            example.id,
+                                                                            def.definition),
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ],
+                                                            );
+                                                          }),
                                                         ],
-                                                      );
-                                                    }),
-                                                  ],
+                                                      ],
+                                                    );
+                                                  }),
                                                 ],
-                                              );
-                                            }),
-                                          ],
-                                        ),
-                                      );
-                                    }),
-                                  ],
-                                ),
+                                              ),
+                                            );
+                                          }),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    height: 16,
+                                    decoration: const BoxDecoration(
+                                      gradient: LinearGradient(
+                                        colors: [
+                                          Color.fromARGB(255, 255, 218, 138),
+                                          Color.fromARGB(0, 255, 218, 138)
+                                        ],
+                                        begin: Alignment.topCenter,
+                                        end: Alignment.bottomCenter,
+                                        stops: [0.3, 1],
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
