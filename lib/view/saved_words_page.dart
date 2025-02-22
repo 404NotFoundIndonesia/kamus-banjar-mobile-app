@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:kamus_banjar_mobile_app/repository/dictionary_repository.dart';
 import 'package:kamus_banjar_mobile_app/view/components/custom_app_bar.dart';
 import 'package:kamus_banjar_mobile_app/view/word_view.dart';
+import 'package:kamus_banjar_mobile_app/utils/saved_words_repository.dart';
 
 class SavedWordsPage extends StatefulWidget {
   final DictionaryRepository dictionaryRepository;
@@ -16,6 +17,7 @@ class SavedWordsPage extends StatefulWidget {
 
 class _SavedWordsPageState extends State<SavedWordsPage> {
   List<List<List<String>>> savedWords = [];
+  final SavedWordsRepository _savedWordsRepository = SavedWordsRepository();
 
   @override
   void initState() {
@@ -36,6 +38,38 @@ class _SavedWordsPageState extends State<SavedWordsPage> {
           ),
         );
       });
+    }
+  }
+
+  Future<void> _editCategoryName(int index) async {
+    String oldCategory = savedWords[index][0][0];
+    TextEditingController controller = TextEditingController(text: oldCategory);
+
+    String? newCategory = await showDialog<String>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("Edit Category Name"),
+          content: TextField(controller: controller),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, null),
+              child: const Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context, controller.text.trim()),
+              child: const Text("Save"),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (newCategory != null &&
+        newCategory.isNotEmpty &&
+        newCategory != oldCategory) {
+      await _savedWordsRepository.editCategoryName(oldCategory, newCategory);
+      _loadSavedWords();
     }
   }
 
@@ -70,81 +104,111 @@ class _SavedWordsPageState extends State<SavedWordsPage> {
                       ],
                     )),
                   )
-                : ListView.builder(
-                    itemCount: savedWords.length,
+                : SingleChildScrollView(
                     padding: const EdgeInsets.all(12),
-                    itemBuilder: (context, index) {
-                      final category = savedWords[index][0].join(', ');
-                      final words = savedWords[index][1];
+                    child: Center(
+                      child: Wrap(
+                        spacing: 12,
+                        runSpacing: 12,
+                        children: savedWords.map((categoryData) {
+                          final category = categoryData[0][0];
+                          final words = categoryData[1];
 
-                      return Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: Colors.grey.shade300),
-                        ),
-                        margin: const EdgeInsets.symmetric(vertical: 8),
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              category
-                                  .split(' ')
-                                  .map((e) =>
-                                      e[0].toUpperCase() +
-                                      e.substring(1).toLowerCase())
-                                  .join(' '),
-                              style: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
+                          return Container(
+                            width: MediaQuery.of(context).size.width /
+                                    ((MediaQuery.of(context).size.width / 300)
+                                        .floor()) -
+                                32,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(color: Colors.grey.shade300),
                             ),
-                            const SizedBox(height: 6),
-                            Wrap(
-                              spacing: 8,
-                              runSpacing: 8,
-                              children: words.map((word) {
-                                return ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    elevation: 0,
-                                    backgroundColor: Colors.blue.shade400,
-                                    foregroundColor: Colors.white,
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 16, vertical: 8),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(80),
-                                    ),
-                                  ),
-                                  onPressed: () async {
-                                    await Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => WordView(
-                                          dictionaryRepository:
-                                              widget.dictionaryRepository,
-                                          word: word,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          16, 16, 0, 0),
+                                      child: Text(
+                                        category
+                                            .split(' ')
+                                            .map((e) =>
+                                                e[0].toUpperCase() +
+                                                e.substring(1).toLowerCase())
+                                            .join(' '),
+                                        style: const TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
                                         ),
                                       ),
-                                    );
-                                    _loadSavedWords();
-                                  },
-                                  child: Text(
-                                    word
-                                        .split(' ')
-                                        .map((e) =>
-                                            e[0].toUpperCase() +
-                                            e.substring(1).toLowerCase())
-                                        .join(' '),
-                                    style: const TextStyle(fontSize: 16),
+                                    ),
+                                    IconButton(
+                                      icon: const Icon(
+                                        Icons.edit_outlined,
+                                        color: Colors.black38,
+                                        size: 20,
+                                      ),
+                                      onPressed: () => _editCategoryName(
+                                          savedWords.indexOf(categoryData)),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 6),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                                  child: Wrap(
+                                    spacing: 4,
+                                    children: words.map((word) {
+                                      return ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          elevation: 0,
+                                          backgroundColor: Colors.blue.shade400,
+                                          foregroundColor: Colors.white,
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 16, vertical: 8),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(80),
+                                          ),
+                                        ),
+                                        onPressed: () async {
+                                          await Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => WordView(
+                                                dictionaryRepository:
+                                                    widget.dictionaryRepository,
+                                                word: word,
+                                              ),
+                                            ),
+                                          );
+                                          _loadSavedWords();
+                                        },
+                                        child: Text(
+                                          word
+                                              .split(' ')
+                                              .map((e) =>
+                                                  e[0].toUpperCase() +
+                                                  e.substring(1).toLowerCase())
+                                              .join(' '),
+                                          style: const TextStyle(fontSize: 16),
+                                        ),
+                                      );
+                                    }).toList(),
                                   ),
-                                );
-                              }).toList(),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                      );
-                    },
+                          );
+                        }).toList(),
+                      ),
+                    ),
                   ),
           ),
         ],

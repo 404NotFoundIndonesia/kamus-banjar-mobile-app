@@ -68,4 +68,15 @@ class SavedWordsRepository {
 
     return false;
   }
+
+  Future<void> editCategoryName(String oldCategory, String newCategory) async {
+    final prefs = await SharedPreferences.getInstance();
+    List<List<List<String>>> savedWords = await loadSavedWords();
+
+    final categoryIndex = savedWords.indexWhere((c) => c[0][0] == oldCategory);
+    if (categoryIndex != -1) {
+      savedWords[categoryIndex][0][0] = newCategory;
+      await prefs.setString(_key, json.encode(savedWords));
+    }
+  }
 }
