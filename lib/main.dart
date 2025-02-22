@@ -40,6 +40,10 @@ class MyApp extends StatelessWidget {
           selectionColor: Colors.blue.shade200,
           selectionHandleColor: Colors.blue.shade700,
         ),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.blue,
+        ),
+        useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
       home: AlphabetsView(dictionaryRepository: dictionaryRepository),

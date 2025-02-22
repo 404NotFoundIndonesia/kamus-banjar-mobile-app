@@ -4,9 +4,8 @@ import 'package:kamus_banjar_mobile_app/utils/saved_words_repository.dart';
 
 class BookmarkButton extends StatefulWidget {
   final String word;
-  final String category;
 
-  const BookmarkButton({super.key, required this.word, required this.category});
+  const BookmarkButton({super.key, required this.word});
 
   @override
   BookmarkButtonState createState() => BookmarkButtonState();
@@ -15,6 +14,7 @@ class BookmarkButton extends StatefulWidget {
 class BookmarkButtonState extends State<BookmarkButton> {
   final SavedWordsRepository savedWordsRepository = SavedWordsRepository();
   bool _isWordSaved = false;
+  String? _savedCategory;
 
   @override
   void initState() {
@@ -23,38 +23,110 @@ class BookmarkButtonState extends State<BookmarkButton> {
   }
 
   void _checkIfWordSaved() async {
-    final isSaved =
-        await savedWordsRepository.isWordSaved(widget.category, widget.word);
+    final savedWords = await savedWordsRepository.loadSavedWords();
+
+    for (var category in savedWords) {
+      if (category[1].contains(widget.word)) {
+        setState(() {
+          _isWordSaved = true;
+          _savedCategory = category[0][0];
+        });
+        return;
+      }
+    }
+
     setState(() {
-      _isWordSaved = isSaved;
+      _isWordSaved = false;
+      _savedCategory = null;
     });
   }
 
   void _toggleWord() async {
     if (_isWordSaved) {
-      await savedWordsRepository.removeWord(widget.category, widget.word);
-      Fluttertoast.showToast(
-        msg: "Kata dihapus dari favorit",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 2,
-        backgroundColor: const Color.fromARGB(255, 72, 93, 112),
-        textColor: Colors.white,
-        fontSize: 16.0,
-      );
+      _showDeleteConfirmationDialog();
     } else {
-      await savedWordsRepository.saveWord(widget.category, widget.word);
-      Fluttertoast.showToast(
-        msg: "Kata disimpan ke favorit",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 2,
-        backgroundColor: const Color.fromARGB(255, 72, 93, 112),
-        textColor: Colors.white,
-        fontSize: 16.0,
-      );
+      _showCategoryInputDialog();
     }
-    _checkIfWordSaved();
+  }
+
+  void _showCategoryInputDialog() {
+    TextEditingController categoryController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("Masukkan Kategori"),
+          content: TextField(
+            controller: categoryController,
+            decoration: const InputDecoration(hintText: "Kategori..."),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("BATAL"),
+            ),
+            TextButton(
+              onPressed: () async {
+                String category = categoryController.text.trim();
+                if (category.isNotEmpty) {
+                  Navigator.pop(context);
+                  await savedWordsRepository.saveWord(category, widget.word);
+                  Fluttertoast.showToast(
+                    msg: "Kata disimpan ke ${categoryController.text.trim()}",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.BOTTOM,
+                    timeInSecForIosWeb: 2,
+                    backgroundColor: const Color.fromARGB(255, 72, 93, 112),
+                    textColor: Colors.white,
+                    fontSize: 16.0,
+                  );
+                  _checkIfWordSaved();
+                }
+              },
+              child: const Text("SIMPAN"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showDeleteConfirmationDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("Hapus Markah"),
+          content: const Text(
+              "Apakah Anda yakin ingin menghapus kata ini dari markah?"),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("BATAL"),
+            ),
+            TextButton(
+              onPressed: () async {
+                Navigator.pop(context);
+                await savedWordsRepository.removeWord(
+                    _savedCategory!, widget.word);
+                Fluttertoast.showToast(
+                  msg: "Kata dihapus dari favorit",
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
+                  timeInSecForIosWeb: 2,
+                  backgroundColor: const Color.fromARGB(255, 72, 93, 112),
+                  textColor: Colors.white,
+                  fontSize: 16.0,
+                );
+                _checkIfWordSaved();
+              },
+              child: const Text("HAPUS"),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override

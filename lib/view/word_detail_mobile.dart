@@ -94,7 +94,6 @@ class WordDetailsMobile extends StatelessWidget {
                       ),
                       BookmarkButton(
                         word: word.word,
-                        category: 'Favorit',
                       ),
                     ],
                   ),
