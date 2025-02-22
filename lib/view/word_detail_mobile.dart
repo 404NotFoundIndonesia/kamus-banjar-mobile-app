@@ -6,10 +6,18 @@ import 'package:kamus_banjar_mobile_app/model/word.dart';
 import 'package:kamus_banjar_mobile_app/utils/word_class_util.dart';
 import 'package:kamus_banjar_mobile_app/view/components/bookmark_button_state.dart';
 import 'package:kamus_banjar_mobile_app/view/word_type_view.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 
 class WordDetailsMobile extends StatelessWidget {
+  WordDetailsMobile({super.key, required this.word});
   final Word word;
-  const WordDetailsMobile({super.key, required this.word});
+  final FlutterTts flutterTts = FlutterTts();
+
+  void _speak(String text) async {
+    await flutterTts.setLanguage("id-ID"); // Adjust as needed
+    await flutterTts.setPitch(1.0);
+    await flutterTts.speak(text);
+  }
 
   void _copyToClipboard(BuildContext context, String text) {
     Clipboard.setData(ClipboardData(text: text)).then((_) {
@@ -84,6 +92,14 @@ class WordDetailsMobile extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 2),
+                      IconButton(
+                        icon: const Icon(Icons.volume_up),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 0, horizontal: 12),
+                        iconSize: 24,
+                        color: Colors.blue,
+                        onPressed: () => _speak(word.word),
+                      ),
                       IconButton(
                         icon: const Icon(Icons.content_copy),
                         padding: const EdgeInsets.symmetric(
@@ -265,6 +281,22 @@ class WordDetailsMobile extends StatelessWidget {
                                             style: const TextStyle(
                                                 fontSize: 24,
                                                 fontWeight: FontWeight.w700),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 36,
+                                          width: 36,
+                                          child: IconButton(
+                                            icon: const Icon(
+                                                Icons.volume_up_outlined),
+                                            padding: EdgeInsets.zero,
+                                            iconSize: 24,
+                                            color: Colors.black26,
+                                            onPressed: () => _speak(
+                                                derivative.syllable.isNotEmpty
+                                                    ? derivative.syllable
+                                                        .replaceAll('.', ' ')
+                                                    : derivative.word),
                                           ),
                                         ),
                                         SizedBox(

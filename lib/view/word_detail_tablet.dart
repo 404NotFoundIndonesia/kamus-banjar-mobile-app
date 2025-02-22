@@ -4,15 +4,20 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kamus_banjar_mobile_app/model/word.dart';
 import 'package:kamus_banjar_mobile_app/utils/word_class_util.dart';
-import 'package:kamus_banjar_mobile_app/utils/saved_words_repository.dart';
 import 'package:kamus_banjar_mobile_app/view/components/bookmark_button_state.dart';
 import 'package:kamus_banjar_mobile_app/view/word_type_view.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 
 class WordDetailsTablet extends StatelessWidget {
   final Word word;
   WordDetailsTablet({super.key, required this.word});
+  final FlutterTts flutterTts = FlutterTts();
 
-  final SavedWordsRepository savedWordsRepository = SavedWordsRepository();
+  void _speak(String text) async {
+    await flutterTts.setLanguage("id-ID"); // Adjust as needed
+    await flutterTts.setPitch(1.0);
+    await flutterTts.speak(text);
+  }
 
   void _copyToClipboard(BuildContext context, String text) {
     Clipboard.setData(ClipboardData(text: text)).then((_) {
@@ -57,22 +62,6 @@ class WordDetailsTablet extends StatelessWidget {
     return TextSpan(children: spans);
   }
 
-  Future<void> isWordSaved(String wordText) async {
-    final isSaved =
-        await savedWordsRepository.isWordSaved('default_category', wordText);
-    if (isSaved) {
-      Fluttertoast.showToast(
-        msg: "Kata sudah disimpan",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 2,
-        backgroundColor: const Color.fromARGB(255, 72, 93, 112),
-        textColor: Colors.white,
-        fontSize: 16.0,
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     int index = 0;
@@ -99,9 +88,15 @@ class WordDetailsTablet extends StatelessWidget {
                   ),
                   const SizedBox(width: 16),
                   IconButton(
+                    icon: const Icon(Icons.volume_up),
+                    padding: EdgeInsets.zero,
+                    iconSize: 24,
+                    color: Colors.blue,
+                    onPressed: () => _speak(word.word),
+                  ),
+                  IconButton(
                     icon: const Icon(Icons.content_copy),
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
+                    padding: EdgeInsets.zero,
                     iconSize: 20,
                     color: Colors.black26,
                     onPressed: () => _copyToClipboard(context, word.word),
@@ -298,6 +293,33 @@ class WordDetailsTablet extends StatelessWidget {
                                                         fontSize: 24,
                                                         fontWeight:
                                                             FontWeight.w700),
+                                                  ),
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            top: 2),
+                                                    child: SizedBox(
+                                                      height: 32,
+                                                      width: 32,
+                                                      child: IconButton(
+                                                        icon: const Icon(Icons
+                                                            .volume_up_outlined),
+                                                        padding:
+                                                            EdgeInsets.zero,
+                                                        iconSize: 20,
+                                                        color: Colors.black26,
+                                                        onPressed: () => _speak(
+                                                            derivative.syllable
+                                                                    .isNotEmpty
+                                                                ? derivative
+                                                                    .syllable
+                                                                    .replaceAll(
+                                                                        '.',
+                                                                        ' ')
+                                                                : derivative
+                                                                    .word),
+                                                      ),
+                                                    ),
                                                   ),
                                                   Padding(
                                                     padding:
