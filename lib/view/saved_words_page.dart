@@ -49,16 +49,16 @@ class _SavedWordsPageState extends State<SavedWordsPage> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text("Edit Category Name"),
+          title: const Text("Ubah nama kategori"),
           content: TextField(controller: controller),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context, null),
-              child: const Text("Cancel"),
+              child: const Text("batal"),
             ),
             TextButton(
               onPressed: () => Navigator.pop(context, controller.text.trim()),
-              child: const Text("Save"),
+              child: const Text("simpan"),
             ),
           ],
         );

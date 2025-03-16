@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kamus_banjar_mobile_app/view/components/custom_app_bar.dart';
+import 'package:kamus_banjar_mobile_app/view/components/gradient_background.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class WordTypeView extends StatelessWidget {
@@ -89,115 +90,125 @@ class WordTypeView extends StatelessWidget {
           color: Colors.white,
           height: double.infinity,
           child: SafeArea(
-            child: SingleChildScrollView(
-              child: Container(
-                padding: const EdgeInsets.all(16),
-                width: double.infinity,
-                child: Column(
-                  spacing: 8,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Mengenal Kelas Kata dalam Bahasa Indonesia",
-                      style: GoogleFonts.poppins()
-                          .copyWith(fontSize: 18, fontWeight: FontWeight.w600),
-                    ),
-                    const Text(
-                      "Memahami berbagai kelas kata dalam bahasa Indonesia sangat penting untuk meningkatkan kualitas tulisan dan komunikasi. Berikut adalah penjelasan formal mengenai 11 jenis kelas kata beserta contohnya",
-                    ),
-                    const SizedBox(height: 8),
-                    Column(
+            child: Stack(
+              children: [
+                const GradientBackground(),
+                SingleChildScrollView(
+                  child: Container(
+                    padding: const EdgeInsets.all(16),
+                    width: double.infinity,
+                    child: Column(
+                      spacing: 8,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(
-                          width: double.infinity,
-                          child: Wrap(
-                            spacing: 16,
-                            runSpacing: 16,
-                            children: kelasKata.entries.map((entry) {
-                              return SizedBox(
-                                width: MediaQuery.of(context).size.width /
-                                        ((MediaQuery.of(context).size.width /
-                                                240)
-                                            .floor()) -
-                                    32,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text(
-                                      entry.key,
-                                      style: GoogleFonts.poppins().copyWith(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w600,
-                                      ),
+                        Text(
+                          "Mengenal Kelas Kata dalam Bahasa Indonesia",
+                          style: GoogleFonts.poppins().copyWith(
+                              fontSize: 18, fontWeight: FontWeight.w600),
+                        ),
+                        const Text(
+                          "Memahami berbagai kelas kata dalam bahasa Indonesia sangat penting untuk meningkatkan kualitas tulisan dan komunikasi. Berikut adalah penjelasan formal mengenai 11 jenis kelas kata beserta contohnya",
+                        ),
+                        const SizedBox(height: 8),
+                        Column(
+                          children: [
+                            SizedBox(
+                              width: double.infinity,
+                              child: Wrap(
+                                spacing: 16,
+                                runSpacing: 16,
+                                children: kelasKata.entries.map((entry) {
+                                  return SizedBox(
+                                    width: MediaQuery.of(context).size.width /
+                                            ((MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    240)
+                                                .floor()) -
+                                        32,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text(
+                                          entry.key,
+                                          style: GoogleFonts.poppins().copyWith(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 4),
+                                        ...entry.value["deskripsi"]
+                                            .map<Widget>((text) => Text(text))
+                                            .toList(),
+                                        const SizedBox(height: 4),
+                                        const Text("Contoh:",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold)),
+                                        Wrap(
+                                          spacing: 4,
+                                          children: entry.value["contoh"]
+                                              .map<Widget>(
+                                                (example) => Chip(
+                                                  label: Text(
+                                                    example,
+                                                    style: TextStyle(
+                                                        color: Colors
+                                                            .blue.shade700),
+                                                  ),
+                                                  backgroundColor:
+                                                      Colors.blue.shade50,
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            32.0),
+                                                    side: const BorderSide(
+                                                        color:
+                                                            Colors.transparent),
+                                                  ),
+                                                ),
+                                              )
+                                              .toList(),
+                                        ),
+                                      ],
                                     ),
-                                    const SizedBox(height: 4),
-                                    ...entry.value["deskripsi"]
-                                        .map<Widget>((text) => Text(text))
-                                        .toList(),
-                                    const SizedBox(height: 4),
-                                    const Text("Contoh:",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold)),
-                                    Wrap(
-                                      spacing: 4,
-                                      children: entry.value["contoh"]
-                                          .map<Widget>(
-                                            (example) => Chip(
-                                              label: Text(
-                                                example,
-                                                style: TextStyle(
-                                                    color:
-                                                        Colors.blue.shade700),
-                                              ),
-                                              backgroundColor:
-                                                  Colors.blue.shade50,
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(32.0),
-                                                side: const BorderSide(
-                                                    color: Colors.transparent),
-                                              ),
-                                            ),
-                                          )
-                                          .toList(),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            }).toList(),
+                                  );
+                                }).toList(),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Text(
+                          "Links",
+                          style: GoogleFonts.poppins().copyWith(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        TextButton.icon(
+                          onPressed: () => _openlink(
+                              "https://penerbitdeepublish.com/kelas-kata/"),
+                          icon: Icon(Icons.link, color: Colors.blue.shade700),
+                          label: Text(
+                            'Sumber Referensi',
+                            style: TextStyle(
+                              color: Colors.blue.shade700,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          style: TextButton.styleFrom(
+                            backgroundColor: Colors.blue.shade50,
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(32)),
                           ),
                         ),
                       ],
                     ),
-                    Text(
-                      "Links",
-                      style: GoogleFonts.poppins().copyWith(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    TextButton.icon(
-                      onPressed: () => _openlink(
-                          "https://penerbitdeepublish.com/kelas-kata/"),
-                      icon: Icon(Icons.link, color: Colors.blue.shade700),
-                      label: Text(
-                        'Sumber Referensi',
-                        style: TextStyle(
-                          color: Colors.blue.shade700,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      style: TextButton.styleFrom(
-                        backgroundColor: Colors.blue.shade50,
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(32)),
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
           ),
         ));

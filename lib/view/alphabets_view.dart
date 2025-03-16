@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kamus_banjar_mobile_app/repository/dictionary_repository.dart';
-import 'package:kamus_banjar_mobile_app/view/components/custom_app_bar_home.dart';
+import 'package:kamus_banjar_mobile_app/view/components/custom_app_bar.dart';
 import 'package:kamus_banjar_mobile_app/view/components/error_view.dart';
 import 'package:kamus_banjar_mobile_app/view/components/gradient_background.dart';
 import 'package:kamus_banjar_mobile_app/view/words_view.dart';
@@ -34,10 +34,10 @@ class _AlphabetsViewState extends State<AlphabetsView> {
   Widget build(BuildContext context) {
     bool isClipped = MediaQuery.of(context).viewPadding.top == 0.0;
     return Scaffold(
-      appBar: CustomAppBarHome(
+      appBar: CustomAppBar(
         title: "Kamus Banjar",
         isClipped: isClipped,
-        dictionaryRepository: widget.dictionaryRepository,
+        // dictionaryRepository: widget.dictionaryRepository,
       ),
       backgroundColor: Colors.white,
       body: SafeArea(
