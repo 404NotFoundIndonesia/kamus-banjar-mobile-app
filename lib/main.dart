@@ -6,6 +6,7 @@ import 'package:kamus_banjar_mobile_app/view/saved_words_page.dart';
 import 'package:kamus_banjar_mobile_app/view/alphabets_view.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter/services.dart';
+import 'package:kamus_banjar_mobile_app/view/setting_page.dart';
 import 'package:kamus_banjar_mobile_app/view/word_type_view.dart';
 
 void main() {
@@ -80,7 +81,7 @@ class _MainScreenState extends State<MainScreen> {
       const WordTypeView(),
       SavedWordsPage(dictionaryRepository: widget.dictionaryRepository),
       const InfoView(),
-      const Center(child: Text("Pengaturan")),
+      const SettingPage()
     ]);
   }
 
