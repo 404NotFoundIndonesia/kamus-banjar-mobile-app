@@ -14,7 +14,7 @@ class WordDetailsMobile extends StatelessWidget {
   final FlutterTts flutterTts = FlutterTts();
 
   void _speak(String text) async {
-    await flutterTts.setLanguage("id-ID"); // Adjust as needed
+    await flutterTts.setLanguage("id-ID");
     await flutterTts.setPitch(1.0);
     await flutterTts.speak(text);
   }
@@ -105,7 +105,7 @@ class WordDetailsMobile extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(
                             vertical: 0, horizontal: 12),
                         iconSize: 20,
-                        color: Colors.black26,
+                        color: Colors.grey.shade600,
                         onPressed: () => _copyToClipboard(context, word.word),
                       ),
                       BookmarkButton(
@@ -120,7 +120,9 @@ class WordDetailsMobile extends StatelessWidget {
                     width: double.infinity,
                     padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
                     decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 219, 239, 255),
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? const Color.fromARGB(255, 18, 41, 58)
+                          : const Color.fromARGB(255, 219, 239, 255),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Column(
@@ -141,7 +143,14 @@ class WordDetailsMobile extends StatelessWidget {
                                             const EdgeInsets.only(right: 8),
                                         child: Text(
                                           def.definition,
-                                          style: const TextStyle(fontSize: 20),
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            color:
+                                                Theme.of(context).brightness ==
+                                                        Brightness.dark
+                                                    ? Colors.white
+                                                    : Colors.black,
+                                          ),
                                         ),
                                       ),
                                       GestureDetector(
@@ -199,6 +208,13 @@ class WordDetailsMobile extends StatelessWidget {
                                                   child: Text.rich(
                                                     _highlightWord(
                                                         example.bjn, word.word),
+                                                    style: TextStyle(
+                                                      color: Theme.of(context)
+                                                                  .brightness ==
+                                                              Brightness.dark
+                                                          ? Colors.white
+                                                          : Colors.black,
+                                                    ),
                                                   ),
                                                 ),
                                               ],
@@ -216,6 +232,13 @@ class WordDetailsMobile extends StatelessWidget {
                                                   child: Text.rich(
                                                     _highlightWord(example.id,
                                                         def.definition),
+                                                    style: TextStyle(
+                                                      color: Theme.of(context)
+                                                                  .brightness ==
+                                                              Brightness.dark
+                                                          ? Colors.white
+                                                          : Colors.black,
+                                                    ),
                                                   ),
                                                 ),
                                               ],
@@ -238,9 +261,11 @@ class WordDetailsMobile extends StatelessWidget {
                   Expanded(
                     child: Container(
                       padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                      decoration: const BoxDecoration(
-                        color: Color.fromARGB(255, 255, 218, 138),
-                        borderRadius: BorderRadius.only(
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? const Color.fromARGB(255, 39, 27, 15)
+                            : const Color.fromARGB(255, 255, 218, 138),
+                        borderRadius: const BorderRadius.only(
                           topLeft: Radius.circular(24),
                           topRight: Radius.circular(24),
                         ),
@@ -248,9 +273,17 @@ class WordDetailsMobile extends StatelessWidget {
                       child: Column(
                         children: [
                           const SizedBox(height: 12),
-                          const Text('Turunan',
-                              style: TextStyle(
-                                  fontSize: 24, fontWeight: FontWeight.w700)),
+                          Text(
+                            'Turunan',
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.w700,
+                              color: Theme.of(context).brightness ==
+                                      Brightness.dark
+                                  ? Colors.white
+                                  : Colors.black,
+                            ),
+                          ),
                           const SizedBox(height: 8),
                           ...word.derivatives.asMap().entries.map((entry) {
                             final derivative = entry.value;
@@ -264,7 +297,10 @@ class WordDetailsMobile extends StatelessWidget {
                               padding: const EdgeInsets.all(16),
                               margin: const EdgeInsets.only(bottom: 16),
                               decoration: BoxDecoration(
-                                color: const Color.fromARGB(255, 255, 243, 192),
+                                color: Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? const Color.fromARGB(255, 75, 56, 25)
+                                    : const Color.fromARGB(255, 255, 243, 192),
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: Column(
@@ -278,9 +314,15 @@ class WordDetailsMobile extends StatelessWidget {
                                               const EdgeInsets.only(right: 4),
                                           child: Text(
                                             derivative.word,
-                                            style: const TextStyle(
-                                                fontSize: 24,
-                                                fontWeight: FontWeight.w700),
+                                            style: TextStyle(
+                                              fontSize: 24,
+                                              fontWeight: FontWeight.w700,
+                                              color: Theme.of(context)
+                                                          .brightness ==
+                                                      Brightness.dark
+                                                  ? Colors.white
+                                                  : Colors.black,
+                                            ),
                                           ),
                                         ),
                                         SizedBox(
@@ -291,7 +333,7 @@ class WordDetailsMobile extends StatelessWidget {
                                                 Icons.volume_up_outlined),
                                             padding: EdgeInsets.zero,
                                             iconSize: 24,
-                                            color: Colors.black26,
+                                            color: Colors.grey.shade600,
                                             onPressed: () => _speak(
                                                 derivative.syllable.isNotEmpty
                                                     ? derivative.syllable
@@ -306,7 +348,7 @@ class WordDetailsMobile extends StatelessWidget {
                                             icon:
                                                 const Icon(Icons.content_copy),
                                             iconSize: 20,
-                                            color: Colors.black26,
+                                            color: Colors.grey.shade600,
                                             onPressed: () => _copyToClipboard(
                                                 context, derivative.word),
                                           ),
@@ -314,7 +356,15 @@ class WordDetailsMobile extends StatelessWidget {
                                       ],
                                     ),
                                   if (derivative.syllable.isNotEmpty)
-                                    Text(derivative.syllable),
+                                    Text(
+                                      derivative.syllable,
+                                      style: TextStyle(
+                                        color: Theme.of(context).brightness ==
+                                                Brightness.dark
+                                            ? Colors.white
+                                            : Colors.black,
+                                      ),
+                                    ),
                                   ...derivative.definitions.map((def) {
                                     return Column(
                                       crossAxisAlignment:
@@ -325,9 +375,17 @@ class WordDetailsMobile extends StatelessWidget {
                                             Padding(
                                               padding: const EdgeInsets.only(
                                                   right: 8),
-                                              child: Text(def.definition,
-                                                  style: const TextStyle(
-                                                      fontSize: 20)),
+                                              child: Text(
+                                                def.definition,
+                                                style: TextStyle(
+                                                  fontSize: 20,
+                                                  color: Theme.of(context)
+                                                              .brightness ==
+                                                          Brightness.dark
+                                                      ? Colors.white
+                                                      : Colors.black,
+                                                ),
+                                              ),
                                             ),
                                             GestureDetector(
                                               onTap: () {
@@ -347,7 +405,11 @@ class WordDetailsMobile extends StatelessWidget {
                                                         horizontal: 12,
                                                         vertical: 1),
                                                 decoration: BoxDecoration(
-                                                  color: Colors.orange,
+                                                  color: Theme.of(context)
+                                                              .brightness ==
+                                                          Brightness.dark
+                                                      ? const Color(0xFFFB8C00)
+                                                      : Colors.orange,
                                                   borderRadius:
                                                       BorderRadius.circular(24),
                                                 ),
@@ -386,6 +448,14 @@ class WordDetailsMobile extends StatelessWidget {
                                                         _highlightWord(
                                                             example.bjn,
                                                             derivative.word),
+                                                        style: TextStyle(
+                                                          color: Theme.of(context)
+                                                                      .brightness ==
+                                                                  Brightness
+                                                                      .dark
+                                                              ? Colors.white
+                                                              : Colors.black,
+                                                        ),
                                                       ),
                                                     ),
                                                   ],
@@ -405,6 +475,14 @@ class WordDetailsMobile extends StatelessWidget {
                                                         _highlightWord(
                                                             example.id,
                                                             def.definition),
+                                                        style: TextStyle(
+                                                          color: Theme.of(context)
+                                                                      .brightness ==
+                                                                  Brightness
+                                                                      .dark
+                                                              ? Colors.white
+                                                              : Colors.black,
+                                                        ),
                                                       ),
                                                     ),
                                                   ],

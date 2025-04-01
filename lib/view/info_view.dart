@@ -202,17 +202,29 @@ class InfoView extends StatelessWidget {
                               TextButton.icon(
                                 onPressed: () =>
                                     _openlink("https://github.com/iqbaleff214"),
-                                icon: Icon(Icons.language,
-                                    color: Colors.blue.shade700),
+                                icon: Icon(
+                                  Icons.language,
+                                  color: Theme.of(context).brightness ==
+                                          Brightness.dark
+                                      ? Colors.blue.shade50
+                                      : Colors.blue.shade700,
+                                ),
                                 label: Text(
                                   'M. Iqbal Effendi',
                                   style: TextStyle(
-                                    color: Colors.blue.shade700,
+                                    color: Theme.of(context).brightness ==
+                                            Brightness.dark
+                                        ? Colors.blue.shade50
+                                        : Colors.blue.shade700,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
                                 style: TextButton.styleFrom(
-                                  backgroundColor: Colors.blue.shade50,
+                                  backgroundColor:
+                                      Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? Colors.blue.shade700
+                                          : Colors.blue.shade50,
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 16),
                                   shape: RoundedRectangleBorder(
@@ -222,17 +234,29 @@ class InfoView extends StatelessWidget {
                               TextButton.icon(
                                 onPressed: () => _openlink(
                                     "https://github.com/andikasujanadi"),
-                                icon: Icon(Icons.language,
-                                    color: Colors.blue.shade700),
+                                icon: Icon(
+                                  Icons.language,
+                                  color: Theme.of(context).brightness ==
+                                          Brightness.dark
+                                      ? Colors.blue.shade50
+                                      : Colors.blue.shade700,
+                                ),
                                 label: Text(
                                   'Andika Sujanadi',
                                   style: TextStyle(
-                                    color: Colors.blue.shade700,
+                                    color: Theme.of(context).brightness ==
+                                            Brightness.dark
+                                        ? Colors.blue.shade50
+                                        : Colors.blue.shade700,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
                                 style: TextButton.styleFrom(
-                                  backgroundColor: Colors.blue.shade50,
+                                  backgroundColor:
+                                      Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? Colors.blue.shade700
+                                          : Colors.blue.shade50,
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 16),
                                   shape: RoundedRectangleBorder(
@@ -242,17 +266,29 @@ class InfoView extends StatelessWidget {
                               TextButton.icon(
                                 onPressed: () =>
                                     _openlink("https://github.com/iklabib"),
-                                icon: Icon(Icons.language,
-                                    color: Colors.blue.shade700),
+                                icon: Icon(
+                                  Icons.language,
+                                  color: Theme.of(context).brightness ==
+                                          Brightness.dark
+                                      ? Colors.blue.shade50
+                                      : Colors.blue.shade700,
+                                ),
                                 label: Text(
                                   'Iklabib',
                                   style: TextStyle(
-                                    color: Colors.blue.shade700,
+                                    color: Theme.of(context).brightness ==
+                                            Brightness.dark
+                                        ? Colors.blue.shade50
+                                        : Colors.blue.shade700,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
                                 style: TextButton.styleFrom(
-                                  backgroundColor: Colors.blue.shade50,
+                                  backgroundColor:
+                                      Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? Colors.blue.shade700
+                                          : Colors.blue.shade50,
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 16),
                                   shape: RoundedRectangleBorder(
@@ -277,16 +313,26 @@ class InfoView extends StatelessWidget {
                                 onPressed: () => _openlink(
                                     "https://github.com/iqbaleff214/kamus-banjar-api"),
                                 icon: Icon(Icons.link,
-                                    color: Colors.blue.shade700),
+                                    color: Theme.of(context).brightness ==
+                                            Brightness.dark
+                                        ? Colors.blue.shade50
+                                        : Colors.blue.shade700),
                                 label: Text(
                                   'API Repository',
                                   style: TextStyle(
-                                    color: Colors.blue.shade700,
+                                    color: Theme.of(context).brightness ==
+                                            Brightness.dark
+                                        ? Colors.blue.shade50
+                                        : Colors.blue.shade700,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
                                 style: TextButton.styleFrom(
-                                  backgroundColor: Colors.blue.shade50,
+                                  backgroundColor:
+                                      Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? Colors.blue.shade700
+                                          : Colors.blue.shade50,
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 16),
                                   shape: RoundedRectangleBorder(
@@ -297,16 +343,26 @@ class InfoView extends StatelessWidget {
                                 onPressed: () => _openlink(
                                     "https://github.com/404NotFoundIndonesia/kamus-banjar-mobile-app"),
                                 icon: Icon(Icons.link,
-                                    color: Colors.blue.shade700),
+                                    color: Theme.of(context).brightness ==
+                                            Brightness.dark
+                                        ? Colors.blue.shade50
+                                        : Colors.blue.shade700),
                                 label: Text(
                                   'Mobile App Repository',
                                   style: TextStyle(
-                                    color: Colors.blue.shade700,
+                                    color: Theme.of(context).brightness ==
+                                            Brightness.dark
+                                        ? Colors.blue.shade50
+                                        : Colors.blue.shade700,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
                                 style: TextButton.styleFrom(
-                                  backgroundColor: Colors.blue.shade50,
+                                  backgroundColor:
+                                      Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? Colors.blue.shade700
+                                          : Colors.blue.shade50,
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 16),
                                   shape: RoundedRectangleBorder(
@@ -317,16 +373,26 @@ class InfoView extends StatelessWidget {
                                 onPressed: () => _openlink(
                                     "https://github.com/iqbaleff214/kamus-banjar-api/wiki/Tentang-Bahasa-Banjar"),
                                 icon: Icon(Icons.link,
-                                    color: Colors.blue.shade700),
+                                    color: Theme.of(context).brightness ==
+                                            Brightness.dark
+                                        ? Colors.blue.shade50
+                                        : Colors.blue.shade700),
                                 label: Text(
                                   'Wiki Tentang Bahasa Banjar',
                                   style: TextStyle(
-                                    color: Colors.blue.shade700,
+                                    color: Theme.of(context).brightness ==
+                                            Brightness.dark
+                                        ? Colors.blue.shade50
+                                        : Colors.blue.shade700,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
                                 style: TextButton.styleFrom(
-                                  backgroundColor: Colors.blue.shade50,
+                                  backgroundColor:
+                                      Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? Colors.blue.shade700
+                                          : Colors.blue.shade50,
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 16),
                                   shape: RoundedRectangleBorder(
@@ -336,23 +402,34 @@ class InfoView extends StatelessWidget {
                               TextButton.icon(
                                 onPressed: () {
                                   Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            const WordTypeView(),
-                                      ));
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const WordTypeView(),
+                                    ),
+                                  );
                                 },
                                 icon: Icon(Icons.chevron_right_rounded,
-                                    color: Colors.blue.shade700),
+                                    color: Theme.of(context).brightness ==
+                                            Brightness.dark
+                                        ? Colors.blue.shade50
+                                        : Colors.blue.shade700),
                                 label: Text(
                                   'Kelas Kata',
                                   style: TextStyle(
-                                    color: Colors.blue.shade700,
+                                    color: Theme.of(context).brightness ==
+                                            Brightness.dark
+                                        ? Colors.blue.shade50
+                                        : Colors.blue.shade700,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
                                 style: TextButton.styleFrom(
-                                  backgroundColor: Colors.blue.shade50,
+                                  backgroundColor:
+                                      Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? Colors.blue.shade700
+                                          : Colors.blue.shade50,
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 16),
                                   shape: RoundedRectangleBorder(

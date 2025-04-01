@@ -145,7 +145,7 @@ class BookmarkButtonState extends State<BookmarkButton> {
           : const Icon(Icons.bookmark_outline),
       padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
       iconSize: 24,
-      color: Colors.black26,
+      color: Colors.grey.shade600,
       onPressed: _toggleWord,
     );
   }

@@ -56,7 +56,9 @@ class _WordsViewState extends State<WordsView> {
                     child: Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(60),
-                        color: const Color.fromARGB(255, 243, 243, 243),
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? Colors.grey.shade800
+                            : const Color.fromARGB(255, 243, 243, 243),
                         border: Border.all(
                           color: Colors.transparent,
                           width: 1,
@@ -158,8 +160,12 @@ class _WordsViewState extends State<WordsView> {
                                   ),
                                   child: Container(
                                     decoration: BoxDecoration(
-                                      color: const Color.fromARGB(
-                                          255, 219, 239, 255),
+                                      color: Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? const Color.fromARGB(
+                                              55, 25, 118, 210)
+                                          : const Color.fromARGB(
+                                              255, 219, 239, 255),
                                       borderRadius: BorderRadius.circular(20),
                                       border: Border.all(
                                         color: Colors.transparent,
@@ -186,7 +192,6 @@ class _WordsViewState extends State<WordsView> {
                                         const Icon(
                                           Icons.arrow_forward_ios,
                                           size: 16,
-                                          color: Colors.black,
                                         ),
                                       ],
                                     ),
@@ -195,15 +200,22 @@ class _WordsViewState extends State<WordsView> {
                               ),
                               Container(
                                 height: 24,
-                                decoration: const BoxDecoration(
+                                decoration: BoxDecoration(
                                   gradient: LinearGradient(
-                                    colors: [
-                                      Color.fromARGB(255, 255, 255, 255),
-                                      Color.fromARGB(0, 255, 255, 255)
-                                    ],
+                                    colors: Theme.of(context).brightness ==
+                                            Brightness.dark
+                                        ? [
+                                            Colors.black,
+                                            Colors.transparent,
+                                          ]
+                                        : [
+                                            Colors.white,
+                                            const Color.fromARGB(
+                                                0, 255, 255, 255),
+                                          ],
                                     begin: Alignment.topCenter,
                                     end: Alignment.bottomCenter,
-                                    stops: [0.3, 1],
+                                    stops: const [0.3, 1],
                                   ),
                                 ),
                               ),

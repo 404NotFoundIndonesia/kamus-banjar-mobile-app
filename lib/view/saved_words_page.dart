@@ -120,9 +120,16 @@ class _SavedWordsPageState extends State<SavedWordsPage> {
                                         .floor()) -
                                 32,
                             decoration: BoxDecoration(
-                              color: Colors.white,
+                              color: Theme.of(context).brightness ==
+                                      Brightness.dark
+                                  ? Colors.grey.shade900
+                                  : Colors.white,
                               borderRadius: BorderRadius.circular(12),
-                              border: Border.all(color: Colors.grey.shade300),
+                              border: Border.all(
+                                  color: Theme.of(context).brightness ==
+                                          Brightness.dark
+                                      ? Colors.grey.shade800
+                                      : Colors.grey.shade300),
                             ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -148,9 +155,9 @@ class _SavedWordsPageState extends State<SavedWordsPage> {
                                       ),
                                     ),
                                     IconButton(
-                                      icon: const Icon(
+                                      icon: Icon(
                                         Icons.edit_outlined,
-                                        color: Colors.black38,
+                                        color: Colors.grey.shade500,
                                         size: 20,
                                       ),
                                       onPressed: () => _editCategoryName(

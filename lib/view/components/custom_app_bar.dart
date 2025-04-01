@@ -26,8 +26,26 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
     double width = MediaQuery.of(context).size.width;
     bool canPop = Navigator.of(context).canPop();
+
+    final List<Color> gradientColors = isDark
+        ? [
+            Colors.grey.shade900,
+            const Color.fromARGB(255, 12, 47, 61),
+            const Color.fromARGB(255, 16, 49, 63),
+            Colors.grey.shade900,
+          ]
+        : const [
+            Colors.white,
+            Color.fromARGB(255, 234, 249, 255),
+            Color.fromARGB(255, 219, 244, 255),
+            Colors.white
+          ];
+
+    final textColor = isDark ? Colors.white : Colors.black;
+    final iconColor = isDark ? Colors.white : Colors.black;
 
     return AppBar(
       automaticallyImplyLeading: false,
@@ -36,12 +54,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: const [
-                  Colors.white,
-                  Color.fromARGB(255, 234, 249, 255),
-                  Color.fromARGB(255, 219, 244, 255),
-                  Colors.white
-                ],
+                colors: gradientColors,
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 stops: [
@@ -65,7 +78,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                     style: GoogleFonts.poppins().copyWith(
                       fontWeight: FontWeight.w600,
                       fontSize: 20,
-                      color: Colors.black,
+                      color: textColor,
                     ),
                   ),
                   if (subtitle.isNotEmpty)
@@ -98,7 +111,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 8),
                   child: IconButton(
-                    icon: const Icon(Icons.arrow_back, color: Colors.black),
+                    icon: Icon(Icons.arrow_back, color: iconColor),
                     onPressed: () => Navigator.of(context).pop(),
                   ),
                 ),
@@ -112,8 +125,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 8),
                   child: IconButton(
-                    icon: const Icon(Icons.subject),
-                    color: Colors.black,
+                    icon: Icon(Icons.subject, color: iconColor),
                     tooltip: "Tentang",
                     onPressed: () {
                       Navigator.push(

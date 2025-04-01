@@ -14,7 +14,7 @@ class WordDetailsTablet extends StatelessWidget {
   final FlutterTts flutterTts = FlutterTts();
 
   void _speak(String text) async {
-    await flutterTts.setLanguage("id-ID"); // Adjust as needed
+    await flutterTts.setLanguage("id-ID");
     await flutterTts.setPitch(1.0);
     await flutterTts.speak(text);
   }
@@ -98,7 +98,7 @@ class WordDetailsTablet extends StatelessWidget {
                     icon: const Icon(Icons.content_copy),
                     padding: EdgeInsets.zero,
                     iconSize: 20,
-                    color: Colors.black26,
+                    color: Colors.grey.shade600,
                     onPressed: () => _copyToClipboard(context, word.word),
                   ),
                   BookmarkButton(
@@ -114,7 +114,9 @@ class WordDetailsTablet extends StatelessWidget {
                 constraints: const BoxConstraints(maxWidth: 400),
                 padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
                 decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 219, 239, 255),
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? const Color.fromARGB(255, 18, 41, 58)
+                      : const Color.fromARGB(255, 219, 239, 255),
                   borderRadius: BorderRadius.circular(24),
                 ),
                 child: Column(
@@ -190,6 +192,13 @@ class WordDetailsTablet extends StatelessWidget {
                                               child: Text.rich(
                                                 _highlightWord(
                                                     example.bjn, word.word),
+                                                style: TextStyle(
+                                                  color: Theme.of(context)
+                                                              .brightness ==
+                                                          Brightness.dark
+                                                      ? Colors.white
+                                                      : Colors.black,
+                                                ),
                                               ),
                                             ),
                                           ],
@@ -207,6 +216,13 @@ class WordDetailsTablet extends StatelessWidget {
                                               child: Text.rich(
                                                 _highlightWord(
                                                     example.id, def.definition),
+                                                style: TextStyle(
+                                                  color: Theme.of(context)
+                                                              .brightness ==
+                                                          Brightness.dark
+                                                      ? Colors.white
+                                                      : Colors.black,
+                                                ),
                                               ),
                                             ),
                                           ],
@@ -237,9 +253,11 @@ class WordDetailsTablet extends StatelessWidget {
                     child: Container(
                       width: double.infinity,
                       padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                      decoration: const BoxDecoration(
-                        color: Color.fromARGB(255, 255, 218, 138),
-                        borderRadius: BorderRadius.only(
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? const Color.fromARGB(255, 39, 27, 15)
+                            : const Color.fromARGB(255, 255, 218, 138),
+                        borderRadius: const BorderRadius.only(
                           topLeft: Radius.circular(24),
                           topRight: Radius.circular(24),
                         ),
@@ -280,8 +298,13 @@ class WordDetailsTablet extends StatelessWidget {
                                               margin: const EdgeInsets.only(
                                                   bottom: 16),
                                               decoration: BoxDecoration(
-                                                color: const Color.fromARGB(
-                                                    255, 255, 243, 192),
+                                                color: Theme.of(context)
+                                                            .brightness ==
+                                                        Brightness.dark
+                                                    ? const Color.fromARGB(
+                                                        255, 75, 56, 25)
+                                                    : const Color.fromARGB(
+                                                        255, 255, 243, 192),
                                                 borderRadius:
                                                     BorderRadius.circular(20),
                                               ),
@@ -315,8 +338,8 @@ class WordDetailsTablet extends StatelessWidget {
                                                                   EdgeInsets
                                                                       .zero,
                                                               iconSize: 20,
-                                                              color: Colors
-                                                                  .black26,
+                                                              color: Colors.grey
+                                                                  .shade600,
                                                               onPressed: () => _speak(derivative
                                                                       .syllable
                                                                       .isNotEmpty
@@ -341,8 +364,8 @@ class WordDetailsTablet extends StatelessWidget {
                                                               icon: const Icon(Icons
                                                                   .content_copy),
                                                               iconSize: 16,
-                                                              color: Colors
-                                                                  .black26,
+                                                              color: Colors.grey
+                                                                  .shade600,
                                                               onPressed: () =>
                                                                   _copyToClipboard(
                                                                       context,
@@ -455,6 +478,12 @@ class WordDetailsTablet extends StatelessWidget {
                                                                         _highlightWord(
                                                                             example.bjn,
                                                                             derivative.word),
+                                                                        style:
+                                                                            TextStyle(
+                                                                          color: Theme.of(context).brightness == Brightness.dark
+                                                                              ? Colors.white
+                                                                              : Colors.black,
+                                                                        ),
                                                                       ),
                                                                     ),
                                                                   ],
@@ -476,6 +505,12 @@ class WordDetailsTablet extends StatelessWidget {
                                                                         _highlightWord(
                                                                             example.id,
                                                                             def.definition),
+                                                                        style:
+                                                                            TextStyle(
+                                                                          color: Theme.of(context).brightness == Brightness.dark
+                                                                              ? Colors.white
+                                                                              : Colors.black,
+                                                                        ),
                                                                       ),
                                                                     ),
                                                                   ],
@@ -497,15 +532,25 @@ class WordDetailsTablet extends StatelessWidget {
                                   ),
                                   Container(
                                     height: 16,
-                                    decoration: const BoxDecoration(
+                                    decoration: BoxDecoration(
                                       gradient: LinearGradient(
-                                        colors: [
-                                          Color.fromARGB(255, 255, 218, 138),
-                                          Color.fromARGB(0, 255, 218, 138)
-                                        ],
+                                        colors: Theme.of(context).brightness ==
+                                                Brightness.dark
+                                            ? [
+                                                const Color.fromARGB(
+                                                    255, 39, 27, 15),
+                                                const Color.fromARGB(
+                                                    0, 39, 27, 15),
+                                              ]
+                                            : [
+                                                const Color.fromARGB(
+                                                    255, 255, 218, 138),
+                                                const Color.fromARGB(
+                                                    0, 255, 218, 138),
+                                              ],
                                         begin: Alignment.topCenter,
                                         end: Alignment.bottomCenter,
-                                        stops: [0.3, 1],
+                                        stops: const [0.3, 1],
                                       ),
                                     ),
                                   ),

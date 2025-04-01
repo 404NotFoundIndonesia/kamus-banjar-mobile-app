@@ -149,28 +149,38 @@ class WordTypeView extends StatelessWidget {
                                         Wrap(
                                           spacing: 4,
                                           children: entry.value["contoh"]
-                                              .map<Widget>(
-                                                (example) => Chip(
-                                                  label: Text(
-                                                    example,
-                                                    style: TextStyle(
-                                                        color: Colors
-                                                            .blue.shade700),
-                                                  ),
-                                                  backgroundColor:
-                                                      Colors.blue.shade50,
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            32.0),
-                                                    side: const BorderSide(
-                                                        color:
-                                                            Colors.transparent),
-                                                  ),
-                                                ),
-                                              )
-                                              .toList(),
-                                        ),
+                                              .map<Widget>((example) {
+                                            // Get the current theme (light or dark)
+                                            bool isDarkMode =
+                                                Theme.of(context).brightness ==
+                                                    Brightness.dark;
+
+                                            // Set the chip's colors based on the theme
+                                            Color chipTextColor = isDarkMode
+                                                ? Colors.blue.shade50
+                                                : Colors.blue.shade700;
+                                            Color chipBackgroundColor =
+                                                isDarkMode
+                                                    ? Colors.blue.shade700
+                                                    : Colors.blue.shade50;
+
+                                            return Chip(
+                                              label: Text(
+                                                example,
+                                                style: TextStyle(
+                                                    color: chipTextColor),
+                                              ),
+                                              backgroundColor:
+                                                  chipBackgroundColor,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(32.0),
+                                                side: const BorderSide(
+                                                    color: Colors.transparent),
+                                              ),
+                                            );
+                                          }).toList(),
+                                        )
                                       ],
                                     ),
                                   );
@@ -189,19 +199,32 @@ class WordTypeView extends StatelessWidget {
                         TextButton.icon(
                           onPressed: () => _openlink(
                               "https://penerbitdeepublish.com/kelas-kata/"),
-                          icon: Icon(Icons.link, color: Colors.blue.shade700),
+                          icon: Icon(
+                            Icons.link,
+                            color:
+                                Theme.of(context).brightness == Brightness.dark
+                                    ? Colors.blue.shade50
+                                    : Colors.blue.shade700,
+                          ),
                           label: Text(
                             'Sumber Referensi',
                             style: TextStyle(
-                              color: Colors.blue.shade700,
+                              color: Theme.of(context).brightness ==
+                                      Brightness.dark
+                                  ? Colors.blue.shade50
+                                  : Colors.blue.shade700,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
                           style: TextButton.styleFrom(
-                            backgroundColor: Colors.blue.shade50,
+                            backgroundColor:
+                                Theme.of(context).brightness == Brightness.dark
+                                    ? Colors.blue.shade700
+                                    : Colors.blue.shade50,
                             padding: const EdgeInsets.symmetric(horizontal: 16),
                             shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(32)),
+                              borderRadius: BorderRadius.circular(32),
+                            ),
                           ),
                         ),
                       ],

@@ -33,13 +33,14 @@ class _AlphabetsViewState extends State<AlphabetsView> {
   @override
   Widget build(BuildContext context) {
     bool isClipped = MediaQuery.of(context).viewPadding.top == 0.0;
+    bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
       appBar: CustomAppBar(
         title: "Kamus Banjar",
         isClipped: isClipped,
-        // dictionaryRepository: widget.dictionaryRepository,
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: isDarkMode ? Colors.black : Colors.white,
       body: SafeArea(
         child: Stack(
           children: [
@@ -56,30 +57,27 @@ class _AlphabetsViewState extends State<AlphabetsView> {
                         return const Center(
                           child: Padding(
                             padding: EdgeInsets.all(60.0),
-                            child: Center(
-                              child: CircularProgressIndicator(
-                                color: Color.fromARGB(113, 33, 149, 243),
-                                backgroundColor:
-                                    Color.fromARGB(41, 33, 149, 243),
-                              ),
-                            ),
+                            child: CircularProgressIndicator(),
                           ),
                         );
                       } else if (snapshot.hasError) {
                         return ErrorView(
-                            pageToRefresh: widget.pageToRefresh ??
-                                AlphabetsView(
-                                    dictionaryRepository:
-                                        widget.dictionaryRepository),
-                            shortErrorMessage: 'Server tidak ditemukan!',
-                            detailedErrorMessage: snapshot.error.toString());
+                          pageToRefresh: widget.pageToRefresh ??
+                              AlphabetsView(
+                                dictionaryRepository:
+                                    widget.dictionaryRepository,
+                              ),
+                          shortErrorMessage: 'Server tidak ditemukan!',
+                          detailedErrorMessage: snapshot.error.toString(),
+                        );
                       } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                         return ErrorView(
                           shortErrorMessage: 'Abjad Bahasa Banjar tidak ada!',
                           pageToRefresh: widget.pageToRefresh ??
                               AlphabetsView(
-                                  dictionaryRepository:
-                                      widget.dictionaryRepository),
+                                dictionaryRepository:
+                                    widget.dictionaryRepository,
+                              ),
                         );
                       } else {
                         final List<Map<String, dynamic>> alphabets =
@@ -98,15 +96,20 @@ class _AlphabetsViewState extends State<AlphabetsView> {
                                   borderRadius: BorderRadius.circular(32.0),
                                   side: BorderSide(
                                     color: total == 0
-                                        ? Colors.black12
+                                        ? (isDarkMode
+                                            ? Colors.white12
+                                            : Colors.black12)
                                         : Colors.transparent,
                                     width: 1,
                                   ),
                                 ),
                                 elevation: 0,
                                 color: total == 0
-                                    ? Colors.white
-                                    : const Color.fromARGB(255, 237, 247, 255),
+                                    ? (isDarkMode ? Colors.black : Colors.white)
+                                    : (isDarkMode
+                                        ? const Color.fromARGB(255, 30, 50, 70)
+                                        : const Color.fromARGB(
+                                            255, 237, 247, 255)),
                                 child: Container(
                                   constraints: const BoxConstraints(
                                     maxWidth: 60,
@@ -125,16 +128,24 @@ class _AlphabetsViewState extends State<AlphabetsView> {
                                             fontSize: 32,
                                             fontWeight: FontWeight.bold,
                                             color: total == 0
-                                                ? Colors.grey
-                                                : const Color.fromARGB(
-                                                    255, 50, 116, 182),
+                                                ? (isDarkMode
+                                                    ? Colors.grey.shade400
+                                                    : Colors.grey)
+                                                : (isDarkMode
+                                                    ? Colors.lightBlue.shade200
+                                                    : const Color.fromARGB(
+                                                        255, 50, 116, 182)),
                                           ),
                                         ),
                                         Divider(
                                           color: total == 0
-                                              ? Colors.black12
-                                              : const Color.fromARGB(
-                                                  55, 25, 118, 210),
+                                              ? (isDarkMode
+                                                  ? Colors.white12
+                                                  : Colors.black12)
+                                              : (isDarkMode
+                                                  ? Colors.blueGrey.shade600
+                                                  : const Color.fromARGB(
+                                                      55, 25, 118, 210)),
                                           thickness: 1,
                                           indent: 1,
                                           endIndent: 1,
@@ -146,9 +157,13 @@ class _AlphabetsViewState extends State<AlphabetsView> {
                                             fontSize: 20,
                                             fontWeight: FontWeight.w700,
                                             color: total == 0
-                                                ? Colors.grey
-                                                : const Color.fromARGB(
-                                                    255, 50, 116, 182),
+                                                ? (isDarkMode
+                                                    ? Colors.grey.shade400
+                                                    : Colors.grey)
+                                                : (isDarkMode
+                                                    ? Colors.lightBlue.shade200
+                                                    : const Color.fromARGB(
+                                                        255, 50, 116, 182)),
                                           ),
                                         ),
                                       ],
@@ -173,8 +188,10 @@ class _AlphabetsViewState extends State<AlphabetsView> {
                                       toastLength: Toast.LENGTH_LONG,
                                       gravity: ToastGravity.BOTTOM,
                                       timeInSecForIosWeb: 2,
-                                      backgroundColor: const Color.fromARGB(
-                                          255, 161, 75, 70),
+                                      backgroundColor: isDarkMode
+                                          ? Colors.red.shade900
+                                          : const Color.fromARGB(
+                                              255, 161, 75, 70),
                                       textColor: Colors.white,
                                       fontSize: 16.0,
                                     ),

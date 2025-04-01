@@ -8,8 +8,9 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter/services.dart';
 import 'package:kamus_banjar_mobile_app/view/setting_page.dart';
 import 'package:kamus_banjar_mobile_app/view/word_type_view.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
+Future<void> main() async {
   const DictionaryService dictionaryService =
       DictionaryService(baseUrl: 'http://kamus-banjar.404notfound.fun');
   const DictionaryRepository dictionaryRepository =
@@ -19,24 +20,78 @@ void main() {
 
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
-      systemNavigationBarColor: Colors.white,
-      systemNavigationBarIconBrightness: Brightness.dark,
+      systemNavigationBarColor: Colors.black,
     ),
   );
 
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-  runApp(const MyApp(dictionaryRepository: dictionaryRepository));
+  ThemeMode savedThemeMode = await _getSavedThemeMode();
+  runApp(MyApp(
+    dictionaryRepository: dictionaryRepository,
+    initialThemeMode: savedThemeMode,
+  ));
   FlutterNativeSplash.remove();
 }
 
-class MyApp extends StatelessWidget {
+Future<ThemeMode> _getSavedThemeMode() async {
+  final prefs = await SharedPreferences.getInstance();
+  int index = prefs.getInt('themeMode') ?? 0;
+  switch (index) {
+    case 1:
+      return ThemeMode.light;
+    case 2:
+      return ThemeMode.dark;
+    default:
+      return ThemeMode.system;
+  }
+}
+
+class MyApp extends StatefulWidget {
+  final ThemeMode initialThemeMode;
   final DictionaryRepository dictionaryRepository;
 
-  const MyApp({super.key, required this.dictionaryRepository});
+  const MyApp({
+    super.key,
+    required this.dictionaryRepository,
+    required this.initialThemeMode,
+  });
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  late ThemeMode themeMode;
+
+  @override
+  void initState() {
+    super.initState();
+    themeMode = widget.initialThemeMode;
+  }
+
+  int _themeModeToIndex(ThemeMode mode) {
+    switch (mode) {
+      case ThemeMode.light:
+        return 1;
+      case ThemeMode.dark:
+        return 2;
+      case ThemeMode.system:
+        return 0;
+    }
+  }
+
+  void updateTheme(ThemeMode mode) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('themeMode', _themeModeToIndex(mode));
+    setState(() {
+      themeMode = mode;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      themeMode: themeMode,
       theme: ThemeData(
         primarySwatch: Colors.blue,
         textSelectionTheme: TextSelectionThemeData(
@@ -49,16 +104,25 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
+      darkTheme: ThemeData.dark(),
       debugShowCheckedModeBanner: false,
-      home: MainScreen(dictionaryRepository: dictionaryRepository),
+      home: MainScreen(
+        dictionaryRepository: widget.dictionaryRepository,
+        updateTheme: updateTheme,
+      ),
     );
   }
 }
 
 class MainScreen extends StatefulWidget {
   final DictionaryRepository dictionaryRepository;
+  final Function(ThemeMode) updateTheme;
 
-  const MainScreen({super.key, required this.dictionaryRepository});
+  const MainScreen({
+    super.key,
+    required this.dictionaryRepository,
+    required this.updateTheme,
+  });
 
   @override
   State<MainScreen> createState() => _MainScreenState();
@@ -81,7 +145,7 @@ class _MainScreenState extends State<MainScreen> {
       const WordTypeView(),
       SavedWordsPage(dictionaryRepository: widget.dictionaryRepository),
       const InfoView(),
-      const SettingPage()
+      SettingPage(updateTheme: widget.updateTheme),
     ]);
   }
 
@@ -94,8 +158,10 @@ class _MainScreenState extends State<MainScreen> {
         children: [
           if (width > 600) ...[
             NavigationRail(
-              backgroundColor: Colors.white,
-              indicatorColor: Colors.amberAccent,
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              indicatorColor: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.blue.shade700
+                  : Colors.blue.shade100,
               selectedIndex: _selectedIndex,
               groupAlignment: groupAlignment,
               onDestinationSelected: (int index) {
@@ -152,8 +218,10 @@ class _MainScreenState extends State<MainScreen> {
       ),
       bottomNavigationBar: width <= 600
           ? NavigationBar(
-              indicatorColor: Colors.amberAccent,
-              backgroundColor: Colors.white,
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              indicatorColor: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.blue.shade700
+                  : Colors.blue.shade100,
               labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
               onDestinationSelected: (int index) {
                 setState(() {
@@ -189,7 +257,7 @@ class _MainScreenState extends State<MainScreen> {
               ],
               selectedIndex: _selectedIndex,
             )
-          : null, // No BottomNavigationBar if width > 600
+          : null,
     );
   }
 }
