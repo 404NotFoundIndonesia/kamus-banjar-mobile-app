@@ -52,4 +52,21 @@ class DictionaryService {
       throw Exception(body['message']);
     }
   }
+
+  Future<List<String>> searchWords(String query) async {
+    List<String> result = [];
+
+    final response =
+        await http.get(Uri.parse('$baseUrl/api/v1/entries?search=$query'));
+    final body = jsonDecode(response.body);
+
+    if (response.statusCode == 200) {
+      for (var word in body['data']['words']) {
+        result.add(word);
+      }
+      return result;
+    } else {
+      throw Exception(body['message']);
+    }
+  }
 }

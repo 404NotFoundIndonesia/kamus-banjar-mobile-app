@@ -17,4 +17,8 @@ class DictionaryRepository {
   Future<Word> getWord(String word) async {
     return await dictionaryService.getWord(word);
   }
+
+  Future<List<String>> searchWords(String query) async {
+    return await dictionaryService.searchWords(query);
+  }
 }

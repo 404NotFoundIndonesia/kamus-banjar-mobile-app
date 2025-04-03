@@ -63,6 +63,7 @@ class BookmarkButtonState extends State<BookmarkButton> {
     String? selectedCategory;
 
     showDialog(
+      // ignore: use_build_context_synchronously
       context: context,
       builder: (context) {
         return AlertDialog(
