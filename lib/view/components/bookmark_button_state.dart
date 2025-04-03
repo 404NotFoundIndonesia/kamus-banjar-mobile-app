@@ -56,17 +56,42 @@ class BookmarkButtonState extends State<BookmarkButton> {
     }).join(' ');
   }
 
-  void _showCategoryInputDialog() {
+  void _showCategoryInputDialog() async {
     TextEditingController categoryController = TextEditingController();
+    List<String> categories = await savedWordsRepository
+        .getAllCategories(); // Get existing categories
+    String? selectedCategory;
 
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
           title: const Text("Masukkan Kategori"),
-          content: TextField(
-            controller: categoryController,
-            decoration: const InputDecoration(hintText: "Kategori..."),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (categories
+                  .isNotEmpty) // Show dropdown only if there are categories
+                DropdownButton<String>(
+                  value: selectedCategory,
+                  hint: const Text("Pilih kategori"),
+                  isExpanded: true,
+                  items: categories.map((category) {
+                    return DropdownMenuItem(
+                      value: category,
+                      child: Text(category),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    selectedCategory = value;
+                    categoryController.text = value ?? ""; // Update text field
+                  },
+                ),
+              TextField(
+                controller: categoryController,
+                decoration: const InputDecoration(hintText: "Kategori baru..."),
+              ),
+            ],
           ),
           actions: [
             TextButton(
@@ -80,8 +105,7 @@ class BookmarkButtonState extends State<BookmarkButton> {
                   Navigator.pop(context);
                   await savedWordsRepository.saveWord(category, widget.word);
                   Fluttertoast.showToast(
-                    msg:
-                        "Kata disimpan ke ${toTitleCase(categoryController.text.trim())}",
+                    msg: "Kata disimpan ke ${toTitleCase(category)}",
                     toastLength: Toast.LENGTH_SHORT,
                     gravity: ToastGravity.BOTTOM,
                     timeInSecForIosWeb: 2,

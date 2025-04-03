@@ -79,4 +79,9 @@ class SavedWordsRepository {
       await prefs.setString(_key, json.encode(savedWords));
     }
   }
+
+  Future<List<String>> getAllCategories() async {
+    List<List<List<String>>> savedWords = await loadSavedWords();
+    return savedWords.map((category) => category[0][0]).toList();
+  }
 }
