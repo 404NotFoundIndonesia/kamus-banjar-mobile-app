@@ -1,17 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kamus_banjar_mobile_app/repository/dictionary_repository.dart';
+import 'package:kamus_banjar_mobile_app/view/alphabets_view.dart';
 import 'package:kamus_banjar_mobile_app/view/components/custom_app_bar.dart';
 import 'package:kamus_banjar_mobile_app/view/components/error_view.dart';
 import 'package:kamus_banjar_mobile_app/view/components/gradient_background.dart';
 import 'package:kamus_banjar_mobile_app/view/word_view.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class WordsView extends StatefulWidget {
-  final String alphabet;
   final DictionaryRepository dictionaryRepository;
+  final Widget? pageToRefresh;
+  final String alphabet;
 
   const WordsView(
-      {super.key, required this.alphabet, required this.dictionaryRepository});
+      {super.key,
+      required this.alphabet,
+      required this.dictionaryRepository,
+      this.pageToRefresh});
 
   @override
   State<WordsView> createState() => _WordsViewState();
@@ -19,12 +25,23 @@ class WordsView extends StatefulWidget {
 
 class _WordsViewState extends State<WordsView> {
   final TextEditingController _searchController = TextEditingController();
-  late Future<List<String>> _words;
+  late Future<List<Map<String, dynamic>>> _alphabets;
+  late Future<List<String>> _words = Future.value([]);
 
   @override
   void initState() {
     super.initState();
-    _words = widget.dictionaryRepository.getWords(widget.alphabet);
+    _alphabets = widget.dictionaryRepository.getAlphabets();
+    _loadData();
+  }
+
+  Future<void> _loadData() async {
+    final prefs = await SharedPreferences.getInstance();
+    final selected = prefs.getString('selectedAlphabet') ?? widget.alphabet;
+
+    setState(() {
+      _words = widget.dictionaryRepository.getWords(selected);
+    });
   }
 
   double getStopValue(double width, double pixelValue) {
@@ -34,6 +51,8 @@ class _WordsViewState extends State<WordsView> {
   @override
   Widget build(BuildContext context) {
     bool isClipped = MediaQuery.of(context).viewPadding.top == 0.0;
+    bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    String selectedAlphabet = "";
     return Scaffold(
       appBar: CustomAppBar(
         title: "Kamus Banjar",
@@ -96,6 +115,140 @@ class _WordsViewState extends State<WordsView> {
                       ),
                     ),
                   ),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Container(
+                      padding: const EdgeInsets.fromLTRB(24, 8, 24, 0),
+                      child: FutureBuilder<List<Map<String, dynamic>>>(
+                        future: _alphabets,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Container();
+                          } else if (snapshot.hasError) {
+                            return Container();
+                          } else if (!snapshot.hasData ||
+                              snapshot.data!.isEmpty) {
+                            return Container();
+                          } else {
+                            final List<Map<String, dynamic>> alphabets =
+                                snapshot.data!;
+                            return Row(
+                              spacing: 8.0,
+                              children:
+                                  List.generate(alphabets.length, (index) {
+                                final letter = alphabets[index]['letter'];
+                                final total = alphabets[index]['total'];
+
+                                return GestureDetector(
+                                  child: Card(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(32.0),
+                                      side: BorderSide(
+                                        color: total == 0
+                                            ? (isDarkMode
+                                                ? Colors.white12
+                                                : Colors.black12)
+                                            : Colors.transparent,
+                                        width: 1,
+                                      ),
+                                    ),
+                                    elevation: 0,
+                                    color: total == 0
+                                        ? (isDarkMode
+                                            ? Colors.black
+                                            : Colors.white)
+                                        : (isDarkMode
+                                            ? const Color.fromARGB(
+                                                255, 30, 50, 70)
+                                            : const Color.fromARGB(
+                                                255, 237, 247, 255)),
+                                    child: Container(
+                                      constraints: const BoxConstraints(
+                                        maxWidth: 60,
+                                        minWidth: 60,
+                                        minHeight: 115,
+                                      ),
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Center(
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              letter.toUpperCase(),
+                                              style: GoogleFonts.poppins()
+                                                  .copyWith(
+                                                fontSize: 32,
+                                                fontWeight: FontWeight.bold,
+                                                color: total == 0
+                                                    ? (isDarkMode
+                                                        ? Colors.grey.shade400
+                                                        : Colors.grey)
+                                                    : (isDarkMode
+                                                        ? Colors
+                                                            .lightBlue.shade200
+                                                        : const Color.fromARGB(
+                                                            255, 50, 116, 182)),
+                                              ),
+                                            ),
+                                            Divider(
+                                              color: total == 0
+                                                  ? (isDarkMode
+                                                      ? Colors.white12
+                                                      : Colors.black12)
+                                                  : (isDarkMode
+                                                      ? Colors.blueGrey.shade600
+                                                      : const Color.fromARGB(
+                                                          55, 25, 118, 210)),
+                                              thickness: 1,
+                                              indent: 1,
+                                              endIndent: 1,
+                                              height: 10,
+                                            ),
+                                            Text(
+                                              '$total',
+                                              style: GoogleFonts.poppins()
+                                                  .copyWith(
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.w700,
+                                                color: total == 0
+                                                    ? (isDarkMode
+                                                        ? Colors.grey.shade400
+                                                        : Colors.grey)
+                                                    : (isDarkMode
+                                                        ? Colors
+                                                            .lightBlue.shade200
+                                                        : const Color.fromARGB(
+                                                            255, 50, 116, 182)),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  onTap: () async {
+                                    final prefs =
+                                        await SharedPreferences.getInstance();
+                                    await prefs.setString('selectedAlphabet',
+                                        letter.toUpperCase());
+                                    setState(() {
+                                      selectedAlphabet =
+                                          prefs.getString('selectedAlphabet') ??
+                                              "A";
+                                      _words = widget.dictionaryRepository
+                                          .getWords(selectedAlphabet);
+                                    });
+                                  },
+                                );
+                              }),
+                            );
+                          }
+                        },
+                      ),
+                    ),
+                  ),
                   FutureBuilder(
                     future: _words,
                     builder: (context, snapshot) {
@@ -111,20 +264,23 @@ class _WordsViewState extends State<WordsView> {
                         );
                       } else if (snapshot.hasError) {
                         return ErrorView(
-                            pageToRefresh: WordsView(
-                              alphabet: widget.alphabet,
-                              dictionaryRepository: widget.dictionaryRepository,
-                            ),
-                            shortErrorMessage: 'Server tidak ditemukan!',
-                            detailedErrorMessage: snapshot.error.toString());
+                          pageToRefresh: widget.pageToRefresh ??
+                              AlphabetsView(
+                                dictionaryRepository:
+                                    widget.dictionaryRepository,
+                              ),
+                          shortErrorMessage: 'Server tidak ditemukan!',
+                          detailedErrorMessage: snapshot.error.toString(),
+                        );
                       } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                         return ErrorView(
-                            pageToRefresh: WordsView(
-                              alphabet: widget.alphabet,
-                              dictionaryRepository: widget.dictionaryRepository,
-                            ),
-                            shortErrorMessage:
-                                'Kosakata Bahasa Banjar tidak ditemukan!');
+                          shortErrorMessage: 'Abjad Bahasa Banjar tidak ada!',
+                          pageToRefresh: widget.pageToRefresh ??
+                              AlphabetsView(
+                                dictionaryRepository:
+                                    widget.dictionaryRepository,
+                              ),
+                        );
                       } else {
                         final List<String> words = snapshot.data!
                             .where(

@@ -3,11 +3,11 @@ import 'package:kamus_banjar_mobile_app/repository/dictionary_repository.dart';
 import 'package:kamus_banjar_mobile_app/service/dictionary_service.dart';
 import 'package:kamus_banjar_mobile_app/view/info_view.dart';
 import 'package:kamus_banjar_mobile_app/view/saved_words_page.dart';
-import 'package:kamus_banjar_mobile_app/view/alphabets_view.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter/services.dart';
 import 'package:kamus_banjar_mobile_app/view/setting_page.dart';
 import 'package:kamus_banjar_mobile_app/view/word_type_view.dart';
+import 'package:kamus_banjar_mobile_app/view/words_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
@@ -62,11 +62,13 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   late ThemeMode themeMode;
+  String initialAlphabet = "A";
 
   @override
   void initState() {
     super.initState();
     themeMode = widget.initialThemeMode;
+    _loadInitialAlphabet();
   }
 
   int _themeModeToIndex(ThemeMode mode) {
@@ -85,6 +87,13 @@ class _MyAppState extends State<MyApp> {
     await prefs.setInt('themeMode', _themeModeToIndex(mode));
     setState(() {
       themeMode = mode;
+    });
+  }
+
+  Future<void> _loadInitialAlphabet() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      initialAlphabet = prefs.getString('selectedAlphabet') ?? 'A';
     });
   }
 
@@ -114,6 +123,7 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
+// ignore: must_be_immutable
 class MainScreen extends StatefulWidget {
   final DictionaryRepository dictionaryRepository;
   final Function(ThemeMode) updateTheme;
@@ -133,26 +143,51 @@ class _MainScreenState extends State<MainScreen> {
   NavigationRailLabelType labelType = NavigationRailLabelType.all;
   bool showLeading = false;
   bool showTrailing = false;
+  bool _isInitialized = false;
   double groupAlignment = 0;
-
+  String initialAlphabet = "A";
   final List<Widget> _pages = [];
 
   @override
   void initState() {
     super.initState();
+    _initPages();
+  }
+
+  void _initPages() async {
+    final prefs = await SharedPreferences.getInstance();
+    initialAlphabet = prefs.getString('selectedAlphabet') ?? 'A';
     _pages.addAll([
-      AlphabetsView(dictionaryRepository: widget.dictionaryRepository),
+      WordsView(
+        alphabet: initialAlphabet,
+        dictionaryRepository: widget.dictionaryRepository,
+        pageToRefresh: MainScreen(
+          dictionaryRepository: widget.dictionaryRepository,
+          updateTheme: widget.updateTheme,
+        ),
+      ),
       const WordTypeView(),
       SavedWordsPage(dictionaryRepository: widget.dictionaryRepository),
       const InfoView(),
       SettingPage(updateTheme: widget.updateTheme),
     ]);
+    setState(() {
+      _isInitialized = true;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-
+    if (!_isInitialized) {
+      return const Scaffold(
+          body: Center(
+        child: CircularProgressIndicator(
+          color: Color.fromARGB(113, 33, 149, 243),
+          backgroundColor: Color.fromARGB(41, 33, 149, 243),
+        ),
+      ));
+    }
     return Scaffold(
       body: Row(
         children: [
@@ -164,8 +199,10 @@ class _MainScreenState extends State<MainScreen> {
                   : Colors.blue.shade100,
               selectedIndex: _selectedIndex,
               groupAlignment: groupAlignment,
-              onDestinationSelected: (int index) {
+              onDestinationSelected: (int index) async {
+                final prefs = await SharedPreferences.getInstance();
                 setState(() {
+                  initialAlphabet = prefs.getString('selectedAlphabet') ?? 'A';
                   _selectedIndex = index;
                 });
               },
