@@ -57,7 +57,6 @@ class _WordsViewState extends State<WordsView> {
       appBar: CustomAppBar(
         title: "Kamus Banjar",
         isClipped: isClipped,
-        subtitle: widget.alphabet.toUpperCase(),
       ),
       backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       body: Stack(
