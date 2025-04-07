@@ -20,7 +20,7 @@ class GradientBackground extends StatelessWidget {
                   Color.fromARGB(255, 255, 240, 217),
                   Colors.white,
                 ],
-          stops: isDark ? const [0, 1] : const [0, 0.3],
+          stops: isDark ? const [0, 0.3] : const [0, 0.3],
         ),
       ),
     );

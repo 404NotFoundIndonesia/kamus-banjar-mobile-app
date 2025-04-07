@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kamus_banjar_mobile_app/repository/dictionary_repository.dart';
@@ -27,6 +29,8 @@ class _WordsViewState extends State<WordsView> {
   final TextEditingController _searchController = TextEditingController();
   late Future<List<Map<String, dynamic>>> _alphabets;
   late Future<List<String>> _words = Future.value([]);
+  Timer? _debounce;
+  List<String> _fuzzyWords = [];
 
   @override
   void initState() {
@@ -46,6 +50,38 @@ class _WordsViewState extends State<WordsView> {
 
   double getStopValue(double width, double pixelValue) {
     return pixelValue / width;
+  }
+
+  void _onSearchChanged(String query) {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      if (query.isNotEmpty) {
+        _fetchWords(query);
+      } else {
+        setState(() {
+          _fuzzyWords = [];
+        });
+      }
+    });
+  }
+
+  void _fetchWords(String query) async {
+    try {
+      List<String> fuzzyWords =
+          await widget.dictionaryRepository.searchWords(query);
+      final words = await _words;
+
+      setState(() {
+        _fuzzyWords = fuzzyWords.where((word) {
+          return !words.contains(_searchController.text);
+        }).toList();
+      });
+    } catch (e) {
+      setState(() {
+        _fuzzyWords = [];
+      });
+    }
   }
 
   @override
@@ -104,9 +140,7 @@ class _WordsViewState extends State<WordsView> {
                                   contentPadding:
                                       EdgeInsets.symmetric(horizontal: 8),
                                 ),
-                                onChanged: (value) {
-                                  setState(() {});
-                                },
+                                onChanged: (value) => _onSearchChanged(value),
                               ),
                             ),
                           ),
@@ -247,6 +281,57 @@ class _WordsViewState extends State<WordsView> {
                         },
                       ),
                     ),
+                  ),
+                  SizedBox(
+                    child: _fuzzyWords.isNotEmpty
+                        ? SizedBox(
+                            height: 72,
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: _fuzzyWords.length,
+                              padding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
+                              itemBuilder: (context, index) {
+                                return Container(
+                                  width: 160,
+                                  margin: const EdgeInsets.symmetric(
+                                      vertical: 4, horizontal: 4),
+                                  decoration: BoxDecoration(
+                                    color: Theme.of(context).brightness ==
+                                            Brightness.dark
+                                        ? const Color.fromARGB(55, 25, 118, 210)
+                                        : const Color.fromARGB(
+                                            255, 219, 239, 255),
+                                    borderRadius: BorderRadius.circular(100),
+                                  ),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => WordView(
+                                            dictionaryRepository:
+                                                widget.dictionaryRepository,
+                                            word: _fuzzyWords[index],
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    child: Center(
+                                      child: Text(
+                                        _fuzzyWords[index],
+                                        style: GoogleFonts.poppins().copyWith(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          )
+                        : Container(),
                   ),
                   FutureBuilder(
                     future: _words,
