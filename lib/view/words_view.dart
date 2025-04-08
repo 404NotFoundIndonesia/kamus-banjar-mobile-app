@@ -148,6 +148,21 @@ class _WordsViewState extends State<WordsView> {
                               ),
                             ),
                           ),
+                          GestureDetector(
+                            onTap: () {
+                              _searchController.clear();
+                              setState(() {
+                                _fuzzyWords.clear();
+                              });
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.only(right: 16),
+                              child: Icon(
+                                Icons.close,
+                                color: Colors.grey.shade500,
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -175,103 +190,69 @@ class _WordsViewState extends State<WordsView> {
                               children:
                                   List.generate(alphabets.length, (index) {
                                 final letter = alphabets[index]['letter'];
-                                final total = alphabets[index]['total'];
 
                                 return GestureDetector(
                                   child: Card(
                                     shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(16),
+                                      borderRadius: BorderRadius.circular(32),
                                       side: BorderSide(
                                         color: selectedAlphabet ==
                                                 letter.toUpperCase()
                                             ? (isDarkMode
-                                                ? Colors.white38
+                                                ? Colors.white12
                                                 : Colors.black12)
                                             : Colors.transparent,
                                         width: 1,
                                       ),
                                     ),
                                     elevation: 0,
-                                    color: total == 0
+                                    color: selectedAlphabet ==
+                                            letter.toUpperCase()
                                         ? (isDarkMode
-                                            ? Colors.black
-                                            : Colors.white)
+                                            ? const Color.fromARGB(
+                                                100, 25, 118, 210)
+                                            : const Color.fromARGB(
+                                                255, 219, 239, 255))
                                         : (isDarkMode
                                             ? const Color.fromARGB(
-                                                255, 30, 50, 70)
+                                                255, 56, 56, 56)
                                             : const Color.fromARGB(
-                                                255, 237, 247, 255)),
+                                                255, 243, 243, 243)),
                                     child: Container(
                                       constraints: const BoxConstraints(
                                         maxWidth: 48,
                                         minWidth: 48,
-                                        minHeight: 70,
+                                        minHeight: 48,
                                       ),
                                       padding: const EdgeInsets.all(4),
                                       child: Center(
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Text(
-                                              letter.toUpperCase(),
-                                              style: GoogleFonts.poppins()
-                                                  .copyWith(
-                                                fontSize: 24,
-                                                fontWeight: FontWeight.bold,
-                                                color: total == 0
-                                                    ? (isDarkMode
-                                                        ? Colors.grey.shade400
-                                                        : Colors.grey)
-                                                    : (isDarkMode
-                                                        ? Colors
-                                                            .lightBlue.shade200
-                                                        : const Color.fromARGB(
-                                                            255, 50, 116, 182)),
-                                              ),
-                                            ),
-                                            Divider(
-                                              color: total == 0
+                                        child: Text(
+                                          letter.toUpperCase(),
+                                          style: GoogleFonts.poppins().copyWith(
+                                              fontSize: 24,
+                                              fontWeight: FontWeight.bold,
+                                              color: selectedAlphabet ==
+                                                      letter.toUpperCase()
                                                   ? (isDarkMode
-                                                      ? Colors.white12
-                                                      : Colors.black12)
-                                                  : (isDarkMode
-                                                      ? Colors.blueGrey.shade600
+                                                      ? Colors
+                                                          .lightBlue.shade200
                                                       : const Color.fromARGB(
-                                                          55, 25, 118, 210)),
-                                              thickness: 1,
-                                              indent: 1,
-                                              endIndent: 1,
-                                              height: 1,
-                                            ),
-                                            Text(
-                                              '$total',
-                                              style: GoogleFonts.poppins()
-                                                  .copyWith(
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.w700,
-                                                color: total == 0
-                                                    ? (isDarkMode
-                                                        ? Colors.grey.shade400
-                                                        : Colors.grey)
-                                                    : (isDarkMode
-                                                        ? Colors
-                                                            .lightBlue.shade200
-                                                        : const Color.fromARGB(
-                                                            255, 50, 116, 182)),
-                                              ),
-                                            ),
-                                          ],
+                                                          255, 50, 116, 182))
+                                                  : (isDarkMode
+                                                      ? Colors.grey.shade300
+                                                      : Colors.grey.shade600)),
                                         ),
                                       ),
                                     ),
                                   ),
                                   onTap: () async {
+                                    _searchController.clear();
                                     final prefs =
                                         await SharedPreferences.getInstance();
                                     await prefs.setString('selectedAlphabet',
                                         letter.toUpperCase());
                                     setState(() {
+                                      _fuzzyWords.clear();
                                       selectedAlphabet =
                                           prefs.getString('selectedAlphabet') ??
                                               "A";
@@ -287,14 +268,25 @@ class _WordsViewState extends State<WordsView> {
                       ),
                     ),
                   ),
+                  Container(
+                    child: _fuzzyWords.isNotEmpty
+                        ? const Padding(
+                            padding: EdgeInsets.only(left: 30, top: 4),
+                            child: Text(
+                              "Mungkin maksud Anda",
+                              style: TextStyle(fontSize: 16),
+                            ),
+                          )
+                        : Container(),
+                  ),
                   SizedBox(
                     child: _fuzzyWords.isNotEmpty
                         ? SizedBox(
-                            height: 72,
+                            height: 52,
                             child: ListView.builder(
                               scrollDirection: Axis.horizontal,
                               itemCount: _fuzzyWords.length,
-                              padding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
+                              padding: const EdgeInsets.fromLTRB(24, 4, 24, 0),
                               itemBuilder: (context, index) {
                                 return Container(
                                   width: 160,
@@ -381,7 +373,7 @@ class _WordsViewState extends State<WordsView> {
                             children: [
                               GridView.builder(
                                 padding:
-                                    const EdgeInsets.fromLTRB(30, 24, 30, 30),
+                                    const EdgeInsets.fromLTRB(30, 20, 30, 30),
                                 gridDelegate:
                                     SliverGridDelegateWithFixedCrossAxisCount(
                                   crossAxisCount:
@@ -445,7 +437,7 @@ class _WordsViewState extends State<WordsView> {
                                 ),
                               ),
                               Container(
-                                height: 24,
+                                height: 20,
                                 decoration: BoxDecoration(
                                   gradient: LinearGradient(
                                     colors: Theme.of(context).brightness ==
