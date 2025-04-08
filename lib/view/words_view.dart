@@ -29,6 +29,8 @@ class _WordsViewState extends State<WordsView> {
   final TextEditingController _searchController = TextEditingController();
   late Future<List<Map<String, dynamic>>> _alphabets;
   late Future<List<String>> _words = Future.value([]);
+  // late Future<String> selectedAlphabet = Future.value("");
+  String selectedAlphabet = "";
   Timer? _debounce;
   List<String> _fuzzyWords = [];
 
@@ -45,6 +47,7 @@ class _WordsViewState extends State<WordsView> {
 
     setState(() {
       _words = widget.dictionaryRepository.getWords(selected);
+      selectedAlphabet = prefs.getString('selectedAlphabet') ?? "A";
     });
   }
 
@@ -72,10 +75,12 @@ class _WordsViewState extends State<WordsView> {
           await widget.dictionaryRepository.searchWords(query);
       final words = await _words;
 
+      final prunedWords =
+          words.where((w) => w.contains(_searchController.text)).toList();
+
       setState(() {
-        _fuzzyWords = fuzzyWords.where((word) {
-          return !words.contains(_searchController.text);
-        }).toList();
+        _fuzzyWords =
+            fuzzyWords.where((word) => !prunedWords.contains(word)).toList();
       });
     } catch (e) {
       setState(() {
@@ -88,7 +93,6 @@ class _WordsViewState extends State<WordsView> {
   Widget build(BuildContext context) {
     bool isClipped = MediaQuery.of(context).viewPadding.top == 0.0;
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    String selectedAlphabet = "";
     return Scaffold(
       appBar: CustomAppBar(
         title: "Kamus Banjar",
@@ -167,7 +171,7 @@ class _WordsViewState extends State<WordsView> {
                             final List<Map<String, dynamic>> alphabets =
                                 snapshot.data!;
                             return Row(
-                              spacing: 8.0,
+                              spacing: 0,
                               children:
                                   List.generate(alphabets.length, (index) {
                                 final letter = alphabets[index]['letter'];
@@ -176,11 +180,12 @@ class _WordsViewState extends State<WordsView> {
                                 return GestureDetector(
                                   child: Card(
                                     shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(32.0),
+                                      borderRadius: BorderRadius.circular(16),
                                       side: BorderSide(
-                                        color: total == 0
+                                        color: selectedAlphabet ==
+                                                letter.toUpperCase()
                                             ? (isDarkMode
-                                                ? Colors.white12
+                                                ? Colors.white38
                                                 : Colors.black12)
                                             : Colors.transparent,
                                         width: 1,
@@ -198,11 +203,11 @@ class _WordsViewState extends State<WordsView> {
                                                 255, 237, 247, 255)),
                                     child: Container(
                                       constraints: const BoxConstraints(
-                                        maxWidth: 60,
-                                        minWidth: 60,
-                                        minHeight: 115,
+                                        maxWidth: 48,
+                                        minWidth: 48,
+                                        minHeight: 70,
                                       ),
-                                      padding: const EdgeInsets.all(8.0),
+                                      padding: const EdgeInsets.all(4),
                                       child: Center(
                                         child: Column(
                                           mainAxisAlignment:
@@ -212,7 +217,7 @@ class _WordsViewState extends State<WordsView> {
                                               letter.toUpperCase(),
                                               style: GoogleFonts.poppins()
                                                   .copyWith(
-                                                fontSize: 32,
+                                                fontSize: 24,
                                                 fontWeight: FontWeight.bold,
                                                 color: total == 0
                                                     ? (isDarkMode
@@ -237,13 +242,13 @@ class _WordsViewState extends State<WordsView> {
                                               thickness: 1,
                                               indent: 1,
                                               endIndent: 1,
-                                              height: 10,
+                                              height: 1,
                                             ),
                                             Text(
                                               '$total',
                                               style: GoogleFonts.poppins()
                                                   .copyWith(
-                                                fontSize: 20,
+                                                fontSize: 12,
                                                 fontWeight: FontWeight.w700,
                                                 color: total == 0
                                                     ? (isDarkMode
@@ -298,7 +303,8 @@ class _WordsViewState extends State<WordsView> {
                                   decoration: BoxDecoration(
                                     color: Theme.of(context).brightness ==
                                             Brightness.dark
-                                        ? const Color.fromARGB(55, 25, 118, 210)
+                                        ? const Color.fromARGB(
+                                            100, 25, 118, 210)
                                         : const Color.fromARGB(
                                             255, 219, 239, 255),
                                     borderRadius: BorderRadius.circular(100),
@@ -403,7 +409,7 @@ class _WordsViewState extends State<WordsView> {
                                       color: Theme.of(context).brightness ==
                                               Brightness.dark
                                           ? const Color.fromARGB(
-                                              55, 25, 118, 210)
+                                              100, 25, 118, 210)
                                           : const Color.fromARGB(
                                               255, 219, 239, 255),
                                       borderRadius: BorderRadius.circular(20),
