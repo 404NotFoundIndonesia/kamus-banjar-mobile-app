@@ -12,7 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
   const DictionaryService dictionaryService =
-      DictionaryService(baseUrl: 'http://kamus-banjar.404notfound.fun');
+      DictionaryService(baseUrl: String.fromEnvironment('API_BASE_URL'));
   const DictionaryRepository dictionaryRepository =
       DictionaryRepository(dictionaryService: dictionaryService);
 

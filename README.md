@@ -33,19 +33,71 @@ Aplikasi ini tersedia di Google Play Store:
 - **Database:** MySQL & JSON file
 
 ## 🔧 Cara Install dan Menjalankan
+### 🧠 Backend (API) - Lokal
+
+1. Clone dan jalankan backend:
+   ```sh
+   git clone https://github.com/iqbaleff214/kamus-banjar-api.git
+   cd kamus-banjar-api
+   ```
+
+2. Install dependencies:
+   ```sh
+   go mod tidy
+   ```
+
+3. Jalankan server lokal:
+   ```sh
+   go run main.go
+   ```
+
+   > Secara default akan berjalan di `http://localhost:8001`.  
+   Pastikan URL ini digunakan di `API_BASE_URL` saat menjalankan aplikasi mobile.
+
+---
+
+### 📱 Mobile App (Flutter)
+
 1. Clone repository ini:
    ```sh
    git clone git@github.com:404NotFoundIndonesia/kamus-banjar-mobile-app.git
    cd kamus-banjar-mobile-app
    ```
+
 2. Install dependencies:
    ```sh
    flutter pub get
    ```
-3. Jalankan aplikasi:
+
+3. Jalankan aplikasi dengan environment variable, silakan ikuti sesuai kebutuhan:
+
+   #### ✅ Command Line
    ```sh
-   flutter run
+   flutter run --dart-define=API_BASE_URL=http://10.0.2.2:8001
    ```
+
+   #### ✅ Android Studio
+   - Buka **Run > Edit Configurations...**
+   - Pilih konfigurasi `main.dart`
+   - Isi **Additional run args**:
+     ```
+     --dart-define=API_BASE_URL=http://10.0.2.2:8001
+     ```
+
+   #### ✅ Visual Studio Code
+   - Tekan `F5` → klik ikon roda gigi untuk edit `launch.json`
+   - Tambahkan:
+     ```json
+     {
+       "name": "Flutter",
+       "request": "launch",
+       "type": "dart",
+       "program": "lib/main.dart",
+       "args": [
+         "--dart-define=API_BASE_URL=http://10.0.2.2:8001"
+       ]
+     }
+     ```
 
 ## 📜 Lisensi
 Proyek ini berlisensi di bawah [MIT License](LICENSE).
