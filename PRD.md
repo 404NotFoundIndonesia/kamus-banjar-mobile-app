@@ -5,13 +5,13 @@
 Kamus Banjar is a Flutter mobile app (Android + iOS) providing a Banjar–Indonesian dictionary. Version 1.2.0 (current) supports read-only dictionary access with local bookmarks. This PRD defines the roadmap to add a community module powered by the v2 backend API.
 
 - **Package**: `com.iqbaleff214.kamus_banjar_mobile_app`
-- **Current version**: 1.2.0 (versionCode 6)
+- **Current version**: 2.0.0 (versionCode 7)
 - **API base**: `https://kamus-banjar.404notfound.fun`
 - **API version**: v2.0.0 (OpenAPI 3.0.3)
 
 ---
 
-## Current State (v1.2.0)
+## Current State (v2.0.0)
 
 | Feature | Status |
 |---|---|
@@ -23,12 +23,12 @@ Kamus Banjar is a Flutter mobile app (Android + iOS) providing a Banjar–Indone
 | Word type reference | ✅ |
 | Dark/light theme | ✅ |
 | Responsive layout (mobile/tablet) | ✅ |
-| User authentication | ❌ |
-| Community contributions | ❌ |
-| Voting / comments | ❌ |
-| Server-side bookmarks | ❌ |
-| Word of the day | ❌ |
-| Admin word management | ❌ |
+| User authentication | ✅ |
+| Community contributions (word proposals) | ✅ |
+| Voting / comments | ✅ |
+| Server-side bookmarks | ✅ |
+| Word of the day | ✅ |
+| Admin word management | ✅ |
 
 ---
 

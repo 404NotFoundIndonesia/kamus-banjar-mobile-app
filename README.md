@@ -23,9 +23,15 @@ Aplikasi ini tersedia di Google Play Store:
 
 ## 🚀 Fitur
 - 🔍 Pencarian kata dalam bahasa Banjar
-- 📜 Daftar kata dengan definisi lengkap
-- ⭐ Simpan kata favorit
-- 🎨 UI minimalis dan ringan
+- 📜 Daftar kata dengan definisi lengkap, contoh kalimat, dan turunan kata
+- ⭐ Simpan kata favorit (lokal untuk tamu, server untuk pengguna terdaftar)
+- 🎨 UI minimalis dan ringan dengan dukungan tema gelap/terang
+- 📅 Kata Hari Ini di halaman utama
+- 👤 Autentikasi pengguna opsional (daftar/masuk)
+- 👍 Voting (suka/tidak suka) pada entri kata
+- 💬 Komentar berulir per entri kata
+- ✏️ Usulan kata baru dari komunitas dengan pelacakan status
+- 🛡️ Panel admin: kelola kata, tinjau usulan, moderasi komentar, kelola pengguna, statistik
 
 ## 🛠️ Teknologi yang Digunakan
 - **Frontend:** Flutter
