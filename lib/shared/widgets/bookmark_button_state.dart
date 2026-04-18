@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:kamus_banjar_mobile_app/core/repositories/auth_repository.dart';
 import 'package:kamus_banjar_mobile_app/core/repositories/saved_words_repository.dart';
+import 'package:provider/provider.dart';
 
 class BookmarkButton extends StatefulWidget {
   final String word;
@@ -12,68 +14,114 @@ class BookmarkButton extends StatefulWidget {
 }
 
 class BookmarkButtonState extends State<BookmarkButton> {
-  final SavedWordsRepository savedWordsRepository = SavedWordsRepository();
   bool _isWordSaved = false;
   String? _savedCategory;
 
   @override
   void initState() {
     super.initState();
-    _checkIfWordSaved();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _checkIfWordSaved());
   }
 
-  void _checkIfWordSaved() async {
-    final savedWords = await savedWordsRepository.loadSavedWords();
+  Future<void> _checkIfWordSaved() async {
+    if (!mounted) return;
+    final savedRepo = context.read<SavedWordsRepository>();
+    final savedWords = await savedRepo.loadSavedWords();
 
     for (var category in savedWords) {
-      if (category[1].contains(widget.word)) {
-        setState(() {
-          _isWordSaved = true;
-          _savedCategory = category[0][0];
-        });
+      if (category.length > 1 && category[1].contains(widget.word)) {
+        if (mounted) {
+          setState(() {
+            _isWordSaved = true;
+            _savedCategory = category[0][0];
+          });
+        }
         return;
       }
     }
 
-    setState(() {
-      _isWordSaved = false;
-      _savedCategory = null;
-    });
-  }
-
-  void _toggleWord() async {
-    if (_isWordSaved) {
-      _showDeleteConfirmationDialog();
-    } else {
-      _showCategoryInputDialog();
+    if (mounted) {
+      setState(() {
+        _isWordSaved = false;
+        _savedCategory = null;
+      });
     }
   }
 
-  String toTitleCase(String text) {
-    return text.split(' ').map((word) {
-      if (word.isEmpty) return word;
-      return "${word[0].toUpperCase()}${word.substring(1).toLowerCase()}";
+  String _toTitleCase(String text) {
+    return text.split(' ').map((w) {
+      if (w.isEmpty) return w;
+      return '${w[0].toUpperCase()}${w.substring(1).toLowerCase()}';
     }).join(' ');
   }
 
-  void _showCategoryInputDialog() async {
+  void _toggleWord(bool isAuthenticated, SavedWordsRepository savedRepo) {
+    if (isAuthenticated) {
+      _toggleServer(savedRepo);
+    } else {
+      if (_isWordSaved) {
+        _showDeleteConfirmationDialog(savedRepo);
+      } else {
+        _showCategoryInputDialog(savedRepo);
+      }
+    }
+  }
+
+  Future<void> _toggleServer(SavedWordsRepository savedRepo) async {
+    final isSaved = savedRepo.serverBookmarks.contains(widget.word);
+    try {
+      if (isSaved) {
+        await savedRepo.removeBookmark(widget.word);
+        Fluttertoast.showToast(
+          msg: 'Kata dihapus dari markah',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: const Color.fromARGB(255, 72, 93, 112),
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+      } else {
+        await savedRepo.addBookmark(widget.word);
+        Fluttertoast.showToast(
+          msg: 'Kata disimpan ke markah',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: const Color.fromARGB(255, 72, 93, 112),
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+      }
+    } catch (_) {
+      Fluttertoast.showToast(
+        msg: 'Terjadi kesalahan. Coba lagi.',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.red.shade700,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    }
+  }
+
+  void _showCategoryInputDialog(SavedWordsRepository savedRepo) async {
     TextEditingController categoryController = TextEditingController();
-    List<String> categories = await savedWordsRepository.getAllCategories();
+    List<String> categories = await savedRepo.getAllCategories();
     String? selectedCategory;
 
+    if (!mounted) return;
+
     showDialog(
-      // ignore: use_build_context_synchronously
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text("Masukkan Kategori"),
+          title: const Text('Masukkan Kategori'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               if (categories.isNotEmpty)
                 DropdownButton<String>(
                   value: selectedCategory,
-                  hint: const Text("Pilih kategori"),
+                  hint: const Text('Pilih kategori'),
                   isExpanded: true,
                   items: categories.map((category) {
                     return DropdownMenuItem(
@@ -83,28 +131,30 @@ class BookmarkButtonState extends State<BookmarkButton> {
                   }).toList(),
                   onChanged: (value) {
                     selectedCategory = value;
-                    categoryController.text = value ?? "";
+                    categoryController.text = value ?? '';
                   },
                 ),
               TextField(
                 controller: categoryController,
-                decoration: const InputDecoration(hintText: "Kategori baru..."),
+                decoration:
+                    const InputDecoration(hintText: 'Kategori baru...'),
               ),
             ],
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text("BATAL"),
+              child: const Text('BATAL'),
             ),
             TextButton(
               onPressed: () async {
-                String category = categoryController.text.trim().toLowerCase();
+                final category =
+                    categoryController.text.trim().toLowerCase();
                 if (category.isNotEmpty) {
                   Navigator.pop(context);
-                  await savedWordsRepository.saveWord(category, widget.word);
+                  await savedRepo.saveWord(category, widget.word);
                   Fluttertoast.showToast(
-                    msg: "Kata disimpan ke ${toTitleCase(category)}",
+                    msg: 'Kata disimpan ke ${_toTitleCase(category)}',
                     toastLength: Toast.LENGTH_SHORT,
                     gravity: ToastGravity.BOTTOM,
                     timeInSecForIosWeb: 2,
@@ -112,10 +162,15 @@ class BookmarkButtonState extends State<BookmarkButton> {
                     textColor: Colors.white,
                     fontSize: 16.0,
                   );
-                  _checkIfWordSaved();
+                  if (mounted) {
+                    setState(() {
+                      _isWordSaved = true;
+                      _savedCategory = category;
+                    });
+                  }
                 }
               },
-              child: const Text("SIMPAN"),
+              child: const Text('SIMPAN'),
             ),
           ],
         );
@@ -123,26 +178,25 @@ class BookmarkButtonState extends State<BookmarkButton> {
     );
   }
 
-  void _showDeleteConfirmationDialog() {
+  void _showDeleteConfirmationDialog(SavedWordsRepository savedRepo) {
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text("Hapus Markah"),
+          title: const Text('Hapus Markah'),
           content: const Text(
-              "Apakah Anda yakin ingin menghapus kata ini dari markah?"),
+              'Apakah Anda yakin ingin menghapus kata ini dari markah?'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text("BATAL"),
+              child: const Text('BATAL'),
             ),
             TextButton(
               onPressed: () async {
                 Navigator.pop(context);
-                await savedWordsRepository.removeWord(
-                    _savedCategory!, widget.word);
+                await savedRepo.removeWord(_savedCategory!, widget.word);
                 Fluttertoast.showToast(
-                  msg: "Kata dihapus dari favorit",
+                  msg: 'Kata dihapus dari favorit',
                   toastLength: Toast.LENGTH_SHORT,
                   gravity: ToastGravity.BOTTOM,
                   timeInSecForIosWeb: 2,
@@ -150,9 +204,14 @@ class BookmarkButtonState extends State<BookmarkButton> {
                   textColor: Colors.white,
                   fontSize: 16.0,
                 );
-                _checkIfWordSaved();
+                if (mounted) {
+                  setState(() {
+                    _isWordSaved = false;
+                    _savedCategory = null;
+                  });
+                }
               },
-              child: const Text("HAPUS"),
+              child: const Text('HAPUS'),
             ),
           ],
         );
@@ -162,14 +221,21 @@ class BookmarkButtonState extends State<BookmarkButton> {
 
   @override
   Widget build(BuildContext context) {
+    final savedRepo = context.watch<SavedWordsRepository>();
+    final auth = context.read<AuthRepository>();
+
+    final bool isSaved = auth.isAuthenticated
+        ? savedRepo.serverBookmarks.contains(widget.word)
+        : _isWordSaved;
+
     return IconButton(
-      icon: _isWordSaved
+      icon: isSaved
           ? const Icon(Icons.bookmark)
           : const Icon(Icons.bookmark_outline),
       padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
       iconSize: 24,
       color: Colors.grey.shade600,
-      onPressed: _toggleWord,
+      onPressed: () => _toggleWord(auth.isAuthenticated, savedRepo),
     );
   }
 }
