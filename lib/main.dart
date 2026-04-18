@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:kamus_banjar_mobile_app/core/repositories/auth_repository.dart';
+import 'package:kamus_banjar_mobile_app/core/repositories/contribution_repository.dart';
 import 'package:kamus_banjar_mobile_app/core/repositories/dictionary_repository.dart';
 import 'package:kamus_banjar_mobile_app/core/repositories/saved_words_repository.dart';
 import 'package:kamus_banjar_mobile_app/core/services/auth_service.dart';
 import 'package:kamus_banjar_mobile_app/core/services/community_service.dart';
+import 'package:kamus_banjar_mobile_app/core/services/contribution_service.dart';
 import 'package:kamus_banjar_mobile_app/core/services/dictionary_service.dart';
 import 'package:kamus_banjar_mobile_app/features/auth/account_view.dart';
 import 'package:kamus_banjar_mobile_app/features/bookmarks/saved_words_page.dart';
@@ -33,6 +35,13 @@ Future<void> main() async {
     authRepository: authRepository,
   );
 
+  const ContributionService contributionService =
+      ContributionService(baseUrl: baseUrl);
+  final ContributionRepository contributionRepository = ContributionRepository(
+    service: contributionService,
+    authRepository: authRepository,
+  );
+
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
 
   SystemChrome.setSystemUIOverlayStyle(
@@ -51,6 +60,7 @@ Future<void> main() async {
         Provider<CommunityService>.value(value: communityService),
         ChangeNotifierProvider.value(value: authRepository),
         ChangeNotifierProvider.value(value: savedWordsRepository),
+        Provider<ContributionRepository>.value(value: contributionRepository),
       ],
       child: MyApp(
         dictionaryRepository: dictionaryRepository,

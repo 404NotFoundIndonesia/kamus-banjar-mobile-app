@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kamus_banjar_mobile_app/core/repositories/auth_repository.dart';
 import 'package:kamus_banjar_mobile_app/features/auth/edit_profile_view.dart';
+import 'package:kamus_banjar_mobile_app/features/contributions/my_contributions_view.dart';
+import 'package:kamus_banjar_mobile_app/features/contributions/submit_word_view.dart';
 import 'package:kamus_banjar_mobile_app/shared/widgets/custom_app_bar.dart';
 import 'package:kamus_banjar_mobile_app/shared/widgets/gradient_background.dart';
 import 'package:provider/provider.dart';
@@ -145,6 +147,54 @@ class ProfileView extends StatelessWidget {
                             color: Colors.blue),
                         label: const Text(
                           'Edit Profil',
+                          style: TextStyle(color: Colors.blue),
+                        ),
+                        style: OutlinedButton.styleFrom(
+                          backgroundColor: Colors.blue.shade50,
+                          side: const BorderSide(color: Colors.blue),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(32),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      OutlinedButton.icon(
+                        onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const SubmitWordView(),
+                          ),
+                        ),
+                        icon: const Icon(Icons.add_circle_outline,
+                            color: Colors.blue),
+                        label: const Text(
+                          'Usulkan Kata Baru',
+                          style: TextStyle(color: Colors.blue),
+                        ),
+                        style: OutlinedButton.styleFrom(
+                          backgroundColor: Colors.blue.shade50,
+                          side: const BorderSide(color: Colors.blue),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(32),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      OutlinedButton.icon(
+                        onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const MyContributionsView(),
+                          ),
+                        ),
+                        icon: const Icon(Icons.list_alt_outlined,
+                            color: Colors.blue),
+                        label: const Text(
+                          'Usulan Saya',
                           style: TextStyle(color: Colors.blue),
                         ),
                         style: OutlinedButton.styleFrom(
