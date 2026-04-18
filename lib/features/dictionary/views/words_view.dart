@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:kamus_banjar_mobile_app/core/repositories/dictionary_repository.dart';
 import 'package:kamus_banjar_mobile_app/features/dictionary/views/alphabets_view.dart';
 import 'package:kamus_banjar_mobile_app/features/dictionary/views/word_view.dart';
+import 'package:kamus_banjar_mobile_app/features/dictionary/widgets/word_of_the_day_card.dart';
 import 'package:kamus_banjar_mobile_app/shared/widgets/custom_app_bar.dart';
 import 'package:kamus_banjar_mobile_app/shared/widgets/error_view.dart';
 import 'package:kamus_banjar_mobile_app/shared/widgets/gradient_background.dart';
@@ -104,6 +105,9 @@ class _WordsViewState extends State<WordsView> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  WordOfTheDayCard(
+                    dictionaryRepository: widget.dictionaryRepository,
+                  ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 30),
                     child: Container(

@@ -48,6 +48,7 @@ Future<void> main() async {
   runApp(
     MultiProvider(
       providers: [
+        Provider<CommunityService>.value(value: communityService),
         ChangeNotifierProvider.value(value: authRepository),
         ChangeNotifierProvider.value(value: savedWordsRepository),
       ],

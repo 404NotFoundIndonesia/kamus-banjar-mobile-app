@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kamus_banjar_mobile_app/core/models/word.dart';
 import 'package:kamus_banjar_mobile_app/core/utils/word_class_util.dart';
+import 'package:kamus_banjar_mobile_app/features/dictionary/widgets/comment_section.dart';
+import 'package:kamus_banjar_mobile_app/features/dictionary/widgets/vote_row.dart';
 import 'package:kamus_banjar_mobile_app/features/dictionary/widgets/word_detail_helpers.dart';
 import 'package:kamus_banjar_mobile_app/features/word_types/word_type_view.dart';
 import 'package:kamus_banjar_mobile_app/shared/widgets/bookmark_button_state.dart';
@@ -57,56 +59,7 @@ class WordDetailsMobile extends StatelessWidget {
                     ],
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(24, 0, 24, 12),
-                  child: Row(
-                    children: [
-                      if (word.source == 'community')
-                        Container(
-                          margin: const EdgeInsets.only(right: 8),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 2),
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).brightness ==
-                                    Brightness.dark
-                                ? const Color(0xFFFB8C00)
-                                : Colors.orange,
-                            borderRadius: BorderRadius.circular(24),
-                          ),
-                          child: const Text(
-                            'Komunitas',
-                            style: TextStyle(
-                              fontSize: 13,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      if (word.votes != null)
-                        Row(
-                          children: [
-                            Icon(Icons.arrow_upward,
-                                size: 14, color: Colors.grey.shade500),
-                            const SizedBox(width: 2),
-                            Text(
-                              '${word.votes!.up}',
-                              style: TextStyle(
-                                  fontSize: 13, color: Colors.grey.shade500),
-                            ),
-                            const SizedBox(width: 8),
-                            Icon(Icons.arrow_downward,
-                                size: 14, color: Colors.grey.shade500),
-                            const SizedBox(width: 2),
-                            Text(
-                              '${word.votes!.down}',
-                              style: TextStyle(
-                                  fontSize: 13, color: Colors.grey.shade500),
-                            ),
-                          ],
-                        ),
-                    ],
-                  ),
-                ),
+                VoteRow(word: word),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Container(
@@ -248,10 +201,10 @@ class WordDetailsMobile extends StatelessWidget {
                     ),
                   ),
                 ),
-                if (word.derivatives.isNotEmpty) const SizedBox(height: 24),
+                CommentSection(word: word.word.toLowerCase()),
+                if (word.derivatives.isNotEmpty) const SizedBox(height: 8),
                 if (word.derivatives.isNotEmpty)
-                  Expanded(
-                    child: Container(
+                  Container(
                       padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                       decoration: BoxDecoration(
                         color: Theme.of(context).brightness == Brightness.dark
@@ -488,7 +441,6 @@ class WordDetailsMobile extends StatelessWidget {
                         ],
                       ),
                     ),
-                  ),
               ],
             ),
           ),
