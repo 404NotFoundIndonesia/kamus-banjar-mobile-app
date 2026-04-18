@@ -25,6 +25,7 @@ class WordMeaning {
 }
 
 class Word {
+  late String? id;
   late String word;
   late String alphabet;
   late String syllables;
@@ -34,6 +35,7 @@ class Word {
   late List<WordDerivative> derivatives;
 
   Word.fromJson(Map<String, dynamic> json) {
+    id = json['id'] as String?;
     word = json['word'];
     alphabet = json['alphabet'];
     syllables = json['syllables'] ?? '';
