@@ -1,11 +1,12 @@
-import 'package:flutter/material.dart';
-import 'package:kamus_banjar_mobile_app/view/components/gradient_background.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
-import 'package:kamus_banjar_mobile_app/repository/dictionary_repository.dart';
-import 'package:kamus_banjar_mobile_app/view/components/custom_app_bar.dart';
-import 'package:kamus_banjar_mobile_app/view/word_view.dart';
-import 'package:kamus_banjar_mobile_app/utils/saved_words_repository.dart';
+
+import 'package:flutter/material.dart';
+import 'package:kamus_banjar_mobile_app/core/repositories/dictionary_repository.dart';
+import 'package:kamus_banjar_mobile_app/core/repositories/saved_words_repository.dart';
+import 'package:kamus_banjar_mobile_app/features/dictionary/views/word_view.dart';
+import 'package:kamus_banjar_mobile_app/shared/widgets/custom_app_bar.dart';
+import 'package:kamus_banjar_mobile_app/shared/widgets/gradient_background.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SavedWordsPage extends StatefulWidget {
   final DictionaryRepository dictionaryRepository;

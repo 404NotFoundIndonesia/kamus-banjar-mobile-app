@@ -31,20 +31,26 @@ dart run flutter_launcher_icons
 
 ```
 lib/
-  model/           # Plain data classes (Word, WordDefinition, WordExample, WordDerivative)
-  service/         # HTTP layer — DictionaryService hits REST API
-  repository/      # DictionaryRepository wraps DictionaryService; SavedWordsRepository uses SharedPreferences
-  utils/           # SavedWordsRepository, WordClassUtil
-  view/
-    components/    # Reusable widgets (CustomAppBar, ErrorView, GradientBackground, BookmarkButtonState)
-    words_view.dart        # Main dictionary tab: alphabet filter + search + word grid
-    word_view.dart         # Word detail (dispatches to mobile/tablet layout)
-    word_detail_mobile.dart / word_detail_tablet.dart
-    word_type_view.dart    # Browse by word class (kata)
-    saved_words_page.dart  # Bookmarked words (categories)
-    alphabets_view.dart    # Alphabet overview
-    info_view.dart / setting_page.dart
-  main.dart        # App entry, MainScreen, theme + navigation setup
+  core/
+    models/word.dart          # Word, WordDefinition, WordExample, WordDerivative
+    repositories/
+      dictionary_repository.dart
+      saved_words_repository.dart   # SharedPreferences-backed bookmark storage
+    services/dictionary_service.dart  # HTTP layer
+    utils/word_class_util.dart        # partOfSpeech abbreviation → full name
+  features/
+    dictionary/
+      views/                  # words_view, word_view, alphabets_view
+      widgets/
+        word_detail_helpers.dart   # shared: speakWord, copyWordToClipboard, highlightWord, toTitleCase
+        word_detail_mobile.dart
+        word_detail_tablet.dart
+    bookmarks/saved_words_page.dart
+    info/info_view.dart
+    settings/setting_page.dart
+    word_types/word_type_view.dart
+  shared/widgets/             # CustomAppBar, CustomAppBarHome, ErrorView, GradientBackground, BookmarkButton
+  main.dart                   # App entry, MainScreen, theme + navigation setup
 ```
 
 ## Key patterns

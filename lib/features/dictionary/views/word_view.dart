@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:kamus_banjar_mobile_app/model/word.dart';
-import 'package:kamus_banjar_mobile_app/repository/dictionary_repository.dart';
-import 'package:kamus_banjar_mobile_app/view/components/custom_app_bar.dart';
-import 'package:kamus_banjar_mobile_app/view/components/error_view.dart';
-import 'package:kamus_banjar_mobile_app/view/components/gradient_background.dart';
-import 'package:kamus_banjar_mobile_app/view/word_detail_mobile.dart';
-import 'package:kamus_banjar_mobile_app/view/word_detail_tablet.dart';
+import 'package:kamus_banjar_mobile_app/core/models/word.dart';
+import 'package:kamus_banjar_mobile_app/core/repositories/dictionary_repository.dart';
+import 'package:kamus_banjar_mobile_app/features/dictionary/widgets/word_detail_mobile.dart';
+import 'package:kamus_banjar_mobile_app/features/dictionary/widgets/word_detail_tablet.dart';
+import 'package:kamus_banjar_mobile_app/shared/widgets/custom_app_bar.dart';
+import 'package:kamus_banjar_mobile_app/shared/widgets/error_view.dart';
+import 'package:kamus_banjar_mobile_app/shared/widgets/gradient_background.dart';
 
 class WordView extends StatefulWidget {
   final String word;
@@ -25,10 +25,6 @@ class _WordViewState extends State<WordView> {
   void initState() {
     super.initState();
     word = widget.dictionaryRepository.getWord(widget.word);
-  }
-
-  double getStopValue(double width, double pixelValue) {
-    return pixelValue / width;
   }
 
   @override

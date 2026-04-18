@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:kamus_banjar_mobile_app/utils/saved_words_repository.dart';
+import 'package:kamus_banjar_mobile_app/core/repositories/saved_words_repository.dart';
 
 class BookmarkButton extends StatefulWidget {
   final String word;
@@ -58,8 +58,7 @@ class BookmarkButtonState extends State<BookmarkButton> {
 
   void _showCategoryInputDialog() async {
     TextEditingController categoryController = TextEditingController();
-    List<String> categories = await savedWordsRepository
-        .getAllCategories(); // Get existing categories
+    List<String> categories = await savedWordsRepository.getAllCategories();
     String? selectedCategory;
 
     showDialog(
@@ -71,8 +70,7 @@ class BookmarkButtonState extends State<BookmarkButton> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              if (categories
-                  .isNotEmpty) // Show dropdown only if there are categories
+              if (categories.isNotEmpty)
                 DropdownButton<String>(
                   value: selectedCategory,
                   hint: const Text("Pilih kategori"),
@@ -85,7 +83,7 @@ class BookmarkButtonState extends State<BookmarkButton> {
                   }).toList(),
                   onChanged: (value) {
                     selectedCategory = value;
-                    categoryController.text = value ?? ""; // Update text field
+                    categoryController.text = value ?? "";
                   },
                 ),
               TextField(

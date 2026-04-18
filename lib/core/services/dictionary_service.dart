@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:kamus_banjar_mobile_app/model/word.dart';
+import 'package:kamus_banjar_mobile_app/core/models/word.dart';
 
 class DictionaryService {
   final String baseUrl;

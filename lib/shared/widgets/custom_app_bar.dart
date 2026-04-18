@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:kamus_banjar_mobile_app/view/info_view.dart';
+import 'package:kamus_banjar_mobile_app/features/info/info_view.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;

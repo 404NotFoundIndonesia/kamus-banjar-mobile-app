@@ -1,14 +1,14 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:kamus_banjar_mobile_app/repository/dictionary_repository.dart';
-import 'package:kamus_banjar_mobile_app/view/components/custom_app_bar.dart';
-import 'package:kamus_banjar_mobile_app/view/components/error_view.dart';
-import 'package:kamus_banjar_mobile_app/view/components/gradient_background.dart';
-import 'package:kamus_banjar_mobile_app/view/word_view.dart';
-import 'package:kamus_banjar_mobile_app/view/words_view.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:kamus_banjar_mobile_app/core/repositories/dictionary_repository.dart';
+import 'package:kamus_banjar_mobile_app/features/dictionary/views/word_view.dart';
+import 'package:kamus_banjar_mobile_app/features/dictionary/views/words_view.dart';
+import 'package:kamus_banjar_mobile_app/shared/widgets/custom_app_bar.dart';
+import 'package:kamus_banjar_mobile_app/shared/widgets/error_view.dart';
+import 'package:kamus_banjar_mobile_app/shared/widgets/gradient_background.dart';
 
 class AlphabetsView extends StatefulWidget {
   final DictionaryRepository dictionaryRepository;

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:kamus_banjar_mobile_app/repository/dictionary_repository.dart';
-import 'package:kamus_banjar_mobile_app/service/dictionary_service.dart';
-import 'package:kamus_banjar_mobile_app/view/info_view.dart';
-import 'package:kamus_banjar_mobile_app/view/saved_words_page.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter/services.dart';
-import 'package:kamus_banjar_mobile_app/view/setting_page.dart';
-import 'package:kamus_banjar_mobile_app/view/word_type_view.dart';
-import 'package:kamus_banjar_mobile_app/view/words_view.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:kamus_banjar_mobile_app/core/repositories/dictionary_repository.dart';
+import 'package:kamus_banjar_mobile_app/core/services/dictionary_service.dart';
+import 'package:kamus_banjar_mobile_app/features/bookmarks/saved_words_page.dart';
+import 'package:kamus_banjar_mobile_app/features/dictionary/views/words_view.dart';
+import 'package:kamus_banjar_mobile_app/features/info/info_view.dart';
+import 'package:kamus_banjar_mobile_app/features/settings/setting_page.dart';
+import 'package:kamus_banjar_mobile_app/features/word_types/word_type_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {

@@ -1,5 +1,5 @@
-import 'package:kamus_banjar_mobile_app/model/word.dart';
-import 'package:kamus_banjar_mobile_app/service/dictionary_service.dart';
+import 'package:kamus_banjar_mobile_app/core/models/word.dart';
+import 'package:kamus_banjar_mobile_app/core/services/dictionary_service.dart';
 
 class DictionaryRepository {
   final DictionaryService dictionaryService;

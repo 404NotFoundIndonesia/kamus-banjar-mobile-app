@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:kamus_banjar_mobile_app/repository/dictionary_repository.dart';
-import 'package:kamus_banjar_mobile_app/view/info_view.dart';
-import 'package:kamus_banjar_mobile_app/view/saved_words_page.dart';
+import 'package:kamus_banjar_mobile_app/core/repositories/dictionary_repository.dart';
+import 'package:kamus_banjar_mobile_app/features/bookmarks/saved_words_page.dart';
+import 'package:kamus_banjar_mobile_app/features/info/info_view.dart';
 
 class CustomAppBarHome extends StatelessWidget implements PreferredSizeWidget {
   final String title;

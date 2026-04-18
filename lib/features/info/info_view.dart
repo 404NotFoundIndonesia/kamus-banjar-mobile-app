@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:kamus_banjar_mobile_app/view/components/custom_app_bar.dart';
-import 'package:kamus_banjar_mobile_app/view/components/gradient_background.dart';
-import 'package:kamus_banjar_mobile_app/view/word_type_view.dart';
+import 'package:kamus_banjar_mobile_app/features/word_types/word_type_view.dart';
+import 'package:kamus_banjar_mobile_app/shared/widgets/custom_app_bar.dart';
+import 'package:kamus_banjar_mobile_app/shared/widgets/gradient_background.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class InfoView extends StatelessWidget {

@@ -1,74 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:kamus_banjar_mobile_app/model/word.dart';
-import 'package:kamus_banjar_mobile_app/utils/word_class_util.dart';
-import 'package:kamus_banjar_mobile_app/view/components/bookmark_button_state.dart';
-import 'package:kamus_banjar_mobile_app/view/word_type_view.dart';
-import 'package:flutter_tts/flutter_tts.dart';
+import 'package:kamus_banjar_mobile_app/core/models/word.dart';
+import 'package:kamus_banjar_mobile_app/core/utils/word_class_util.dart';
+import 'package:kamus_banjar_mobile_app/features/dictionary/widgets/word_detail_helpers.dart';
+import 'package:kamus_banjar_mobile_app/features/word_types/word_type_view.dart';
+import 'package:kamus_banjar_mobile_app/shared/widgets/bookmark_button_state.dart';
 
 class WordDetailsMobile extends StatelessWidget {
-  WordDetailsMobile({super.key, required this.word});
+  const WordDetailsMobile({super.key, required this.word});
   final Word word;
-  final FlutterTts flutterTts = FlutterTts();
-
-  void _speak(String text) async {
-    await flutterTts.setLanguage("id-ID");
-    await flutterTts.setPitch(1.0);
-    await flutterTts.speak(text);
-  }
-
-  void _copyToClipboard(BuildContext context, String text) {
-    Clipboard.setData(ClipboardData(text: text)).then((_) {
-      Fluttertoast.showToast(
-        msg: "Kata $text disalin ke papan klip",
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 2,
-        backgroundColor: const Color.fromARGB(255, 72, 93, 112),
-        textColor: Colors.white,
-        fontSize: 16.0,
-      );
-    });
-  }
-
-  TextSpan _highlightWord(String text, String targets) {
-    List<TextSpan> spans = [];
-    List<String> targetList = targets.split(';').map((e) => e.trim()).toList();
-    if (targetList.isEmpty) {
-      return TextSpan(text: text);
-    }
-    String pattern = targetList.map(RegExp.escape).join('|');
-    RegExp regExp = RegExp(pattern, caseSensitive: false);
-    Iterable<RegExpMatch> matches = regExp.allMatches(text);
-    int lastMatchEnd = 0;
-    for (RegExpMatch match in matches) {
-      if (match.start > lastMatchEnd) {
-        spans.add(TextSpan(text: text.substring(lastMatchEnd, match.start)));
-      }
-      String matchedWord = match.group(0) ?? '';
-      spans.add(
-        TextSpan(
-          text: matchedWord.toLowerCase(),
-          style: const TextStyle(fontWeight: FontWeight.bold),
-        ),
-      );
-      lastMatchEnd = match.end;
-    }
-    if (lastMatchEnd < text.length) {
-      spans.add(TextSpan(text: text.substring(lastMatchEnd)));
-    }
-    return TextSpan(children: spans);
-  }
 
   @override
   Widget build(BuildContext context) {
     int index = 0;
-    word.word = word.word
-        .split(' ')
-        .map((e) => e[0].toUpperCase() + e.substring(1).toLowerCase())
-        .join(' ');
+    word.word = toTitleCase(word.word);
     return SingleChildScrollView(
       child: ConstrainedBox(
         constraints: BoxConstraints(
@@ -98,7 +43,7 @@ class WordDetailsMobile extends StatelessWidget {
                             vertical: 0, horizontal: 12),
                         iconSize: 24,
                         color: Colors.blue,
-                        onPressed: () => _speak(word.word),
+                        onPressed: () => speakWord(word.word),
                       ),
                       IconButton(
                         icon: const Icon(Icons.content_copy),
@@ -106,11 +51,9 @@ class WordDetailsMobile extends StatelessWidget {
                             vertical: 0, horizontal: 12),
                         iconSize: 20,
                         color: Colors.grey.shade600,
-                        onPressed: () => _copyToClipboard(context, word.word),
+                        onPressed: () => copyWordToClipboard(context, word.word),
                       ),
-                      BookmarkButton(
-                        word: word.word,
-                      ),
+                      BookmarkButton(word: word.word),
                     ],
                   ),
                 ),
@@ -145,11 +88,10 @@ class WordDetailsMobile extends StatelessWidget {
                                           def.definition,
                                           style: TextStyle(
                                             fontSize: 20,
-                                            color:
-                                                Theme.of(context).brightness ==
-                                                        Brightness.dark
-                                                    ? Colors.white
-                                                    : Colors.black,
+                                            color: Theme.of(context).brightness ==
+                                                    Brightness.dark
+                                                ? Colors.white
+                                                : Colors.black,
                                           ),
                                         ),
                                       ),
@@ -206,7 +148,7 @@ class WordDetailsMobile extends StatelessWidget {
                                                 ),
                                                 Expanded(
                                                   child: Text.rich(
-                                                    _highlightWord(
+                                                    highlightWord(
                                                         example.bjn, word.word),
                                                     style: TextStyle(
                                                       color: Theme.of(context)
@@ -230,7 +172,7 @@ class WordDetailsMobile extends StatelessWidget {
                                                 ),
                                                 Expanded(
                                                   child: Text.rich(
-                                                    _highlightWord(example.id,
+                                                    highlightWord(example.id,
                                                         def.definition),
                                                     style: TextStyle(
                                                       color: Theme.of(context)
@@ -287,12 +229,7 @@ class WordDetailsMobile extends StatelessWidget {
                           const SizedBox(height: 8),
                           ...word.derivatives.asMap().entries.map((entry) {
                             final derivative = entry.value;
-                            derivative.word = derivative.word
-                                .split(' ')
-                                .map((e) =>
-                                    e[0].toUpperCase() +
-                                    e.substring(1).toLowerCase())
-                                .join(' ');
+                            derivative.word = toTitleCase(derivative.word);
                             return Container(
                               padding: const EdgeInsets.all(16),
                               margin: const EdgeInsets.only(bottom: 16),
@@ -334,7 +271,7 @@ class WordDetailsMobile extends StatelessWidget {
                                             padding: EdgeInsets.zero,
                                             iconSize: 24,
                                             color: Colors.grey.shade600,
-                                            onPressed: () => _speak(
+                                            onPressed: () => speakWord(
                                                 derivative.syllable.isNotEmpty
                                                     ? derivative.syllable
                                                         .replaceAll('.', ' ')
@@ -349,8 +286,9 @@ class WordDetailsMobile extends StatelessWidget {
                                                 const Icon(Icons.content_copy),
                                             iconSize: 20,
                                             color: Colors.grey.shade600,
-                                            onPressed: () => _copyToClipboard(
-                                                context, derivative.word),
+                                            onPressed: () =>
+                                                copyWordToClipboard(
+                                                    context, derivative.word),
                                           ),
                                         ),
                                       ],
@@ -445,14 +383,14 @@ class WordDetailsMobile extends StatelessWidget {
                                                     ),
                                                     Expanded(
                                                       child: Text.rich(
-                                                        _highlightWord(
+                                                        highlightWord(
                                                             example.bjn,
                                                             derivative.word),
                                                         style: TextStyle(
-                                                          color: Theme.of(context)
-                                                                      .brightness ==
-                                                                  Brightness
-                                                                      .dark
+                                                          color: Theme.of(
+                                                                      context)
+                                                                  .brightness ==
+                                                              Brightness.dark
                                                               ? Colors.white
                                                               : Colors.black,
                                                         ),
@@ -472,14 +410,13 @@ class WordDetailsMobile extends StatelessWidget {
                                                     ),
                                                     Expanded(
                                                       child: Text.rich(
-                                                        _highlightWord(
-                                                            example.id,
+                                                        highlightWord(example.id,
                                                             def.definition),
                                                         style: TextStyle(
-                                                          color: Theme.of(context)
-                                                                      .brightness ==
-                                                                  Brightness
-                                                                      .dark
+                                                          color: Theme.of(
+                                                                      context)
+                                                                  .brightness ==
+                                                              Brightness.dark
                                                               ? Colors.white
                                                               : Colors.black,
                                                         ),

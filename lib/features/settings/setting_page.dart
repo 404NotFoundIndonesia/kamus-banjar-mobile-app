@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:kamus_banjar_mobile_app/view/components/custom_app_bar.dart';
-import 'package:kamus_banjar_mobile_app/view/components/gradient_background.dart';
+import 'package:kamus_banjar_mobile_app/shared/widgets/custom_app_bar.dart';
+import 'package:kamus_banjar_mobile_app/shared/widgets/gradient_background.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingPage extends StatefulWidget {

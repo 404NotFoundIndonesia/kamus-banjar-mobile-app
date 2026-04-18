@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:kamus_banjar_mobile_app/view/components/custom_app_bar.dart';
-import 'package:kamus_banjar_mobile_app/view/components/gradient_background.dart';
+import 'package:kamus_banjar_mobile_app/shared/widgets/custom_app_bar.dart';
+import 'package:kamus_banjar_mobile_app/shared/widgets/gradient_background.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class WordTypeView extends StatelessWidget {
@@ -150,12 +150,9 @@ class WordTypeView extends StatelessWidget {
                                           spacing: 4,
                                           children: entry.value["contoh"]
                                               .map<Widget>((example) {
-                                            // Get the current theme (light or dark)
                                             bool isDarkMode =
                                                 Theme.of(context).brightness ==
                                                     Brightness.dark;
-
-                                            // Set the chip's colors based on the theme
                                             Color chipTextColor = isDarkMode
                                                 ? Colors.blue.shade50
                                                 : Colors.blue.shade700;

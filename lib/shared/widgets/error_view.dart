@@ -120,10 +120,8 @@ class ErrorViewState extends State<ErrorView> {
                           style: TextStyle(color: Colors.blue),
                         ),
                         style: OutlinedButton.styleFrom(
-                          backgroundColor:
-                              Colors.blue.shade50, // Light background
-                          side: const BorderSide(
-                              color: Colors.blue), // Border color
+                          backgroundColor: Colors.blue.shade50,
+                          side: const BorderSide(color: Colors.blue),
                           padding: const EdgeInsets.symmetric(
                               horizontal: 16, vertical: 12),
                           shape: RoundedRectangleBorder(
@@ -139,10 +137,8 @@ class ErrorViewState extends State<ErrorView> {
                           style: TextStyle(color: Colors.blue),
                         ),
                         style: OutlinedButton.styleFrom(
-                          backgroundColor:
-                              Colors.blue.shade50, // Light background
-                          side: const BorderSide(
-                              color: Colors.blue), // Border color
+                          backgroundColor: Colors.blue.shade50,
+                          side: const BorderSide(color: Colors.blue),
                           padding: const EdgeInsets.symmetric(
                               horizontal: 16, vertical: 12),
                           shape: RoundedRectangleBorder(
@@ -158,8 +154,8 @@ class ErrorViewState extends State<ErrorView> {
                     decoration: BoxDecoration(
                       border: Border(
                         bottom: BorderSide(
-                          color: Colors.grey.shade300, // Border color
-                          width: 1, // Border thickness
+                          color: Colors.grey.shade300,
+                          width: 1,
                         ),
                       ),
                     ),
@@ -184,10 +180,8 @@ class ErrorViewState extends State<ErrorView> {
                         style: const TextStyle(color: Colors.blue),
                       ),
                       style: OutlinedButton.styleFrom(
-                        backgroundColor:
-                            Colors.blue.shade50, // Light background
-                        side: const BorderSide(
-                            color: Colors.blue), // Border color
+                        backgroundColor: Colors.blue.shade50,
+                        side: const BorderSide(color: Colors.blue),
                         padding: const EdgeInsets.symmetric(
                             horizontal: 16, vertical: 12),
                         shape: RoundedRectangleBorder(
@@ -210,10 +204,8 @@ class ErrorViewState extends State<ErrorView> {
                         style: TextStyle(color: Colors.blue),
                       ),
                       style: OutlinedButton.styleFrom(
-                        backgroundColor:
-                            Colors.blue.shade50, // Light background
-                        side: const BorderSide(
-                            color: Colors.blue), // Border color
+                        backgroundColor: Colors.blue.shade50,
+                        side: const BorderSide(color: Colors.blue),
                         padding: const EdgeInsets.symmetric(
                             horizontal: 16, vertical: 12),
                         shape: RoundedRectangleBorder(

@@ -2,12 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:kamus_banjar_mobile_app/repository/dictionary_repository.dart';
-import 'package:kamus_banjar_mobile_app/view/alphabets_view.dart';
-import 'package:kamus_banjar_mobile_app/view/components/custom_app_bar.dart';
-import 'package:kamus_banjar_mobile_app/view/components/error_view.dart';
-import 'package:kamus_banjar_mobile_app/view/components/gradient_background.dart';
-import 'package:kamus_banjar_mobile_app/view/word_view.dart';
+import 'package:kamus_banjar_mobile_app/core/repositories/dictionary_repository.dart';
+import 'package:kamus_banjar_mobile_app/features/dictionary/views/alphabets_view.dart';
+import 'package:kamus_banjar_mobile_app/features/dictionary/views/word_view.dart';
+import 'package:kamus_banjar_mobile_app/shared/widgets/custom_app_bar.dart';
+import 'package:kamus_banjar_mobile_app/shared/widgets/error_view.dart';
+import 'package:kamus_banjar_mobile_app/shared/widgets/gradient_background.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class WordsView extends StatefulWidget {
@@ -29,7 +29,6 @@ class _WordsViewState extends State<WordsView> {
   final TextEditingController _searchController = TextEditingController();
   late Future<List<Map<String, dynamic>>> _alphabets;
   late Future<List<String>> _words = Future.value([]);
-  // late Future<String> selectedAlphabet = Future.value("");
   String selectedAlphabet = "";
   Timer? _debounce;
   List<String> _fuzzyWords = [];
@@ -49,10 +48,6 @@ class _WordsViewState extends State<WordsView> {
       _words = widget.dictionaryRepository.getWords(selected);
       selectedAlphabet = prefs.getString('selectedAlphabet') ?? "A";
     });
-  }
-
-  double getStopValue(double width, double pixelValue) {
-    return pixelValue / width;
   }
 
   void _onSearchChanged(String query) {
