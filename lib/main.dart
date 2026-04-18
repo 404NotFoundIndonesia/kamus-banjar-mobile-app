@@ -1,20 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:kamus_banjar_mobile_app/core/repositories/auth_repository.dart';
 import 'package:kamus_banjar_mobile_app/core/repositories/dictionary_repository.dart';
+import 'package:kamus_banjar_mobile_app/core/services/auth_service.dart';
 import 'package:kamus_banjar_mobile_app/core/services/dictionary_service.dart';
+import 'package:kamus_banjar_mobile_app/features/auth/account_view.dart';
 import 'package:kamus_banjar_mobile_app/features/bookmarks/saved_words_page.dart';
 import 'package:kamus_banjar_mobile_app/features/dictionary/views/words_view.dart';
 import 'package:kamus_banjar_mobile_app/features/info/info_view.dart';
 import 'package:kamus_banjar_mobile_app/features/settings/setting_page.dart';
 import 'package:kamus_banjar_mobile_app/features/word_types/word_type_view.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
+  const String baseUrl = String.fromEnvironment('API_BASE_URL');
   const DictionaryService dictionaryService =
-      DictionaryService(baseUrl: String.fromEnvironment('API_BASE_URL'));
+      DictionaryService(baseUrl: baseUrl);
   const DictionaryRepository dictionaryRepository =
       DictionaryRepository(dictionaryService: dictionaryService);
+
+  const AuthService authService = AuthService(baseUrl: baseUrl);
+  final AuthRepository authRepository =
+      AuthRepository(authService: authService);
 
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
 
@@ -26,10 +35,19 @@ Future<void> main() async {
 
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   ThemeMode savedThemeMode = await _getSavedThemeMode();
-  runApp(MyApp(
-    dictionaryRepository: dictionaryRepository,
-    initialThemeMode: savedThemeMode,
-  ));
+  await authRepository.init();
+
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider.value(value: authRepository),
+      ],
+      child: MyApp(
+        dictionaryRepository: dictionaryRepository,
+        initialThemeMode: savedThemeMode,
+      ),
+    ),
+  );
   FlutterNativeSplash.remove();
 }
 
@@ -62,13 +80,11 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   late ThemeMode themeMode;
-  String initialAlphabet = "A";
 
   @override
   void initState() {
     super.initState();
     themeMode = widget.initialThemeMode;
-    _loadInitialAlphabet();
   }
 
   int _themeModeToIndex(ThemeMode mode) {
@@ -87,13 +103,6 @@ class _MyAppState extends State<MyApp> {
     await prefs.setInt('themeMode', _themeModeToIndex(mode));
     setState(() {
       themeMode = mode;
-    });
-  }
-
-  Future<void> _loadInitialAlphabet() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      initialAlphabet = prefs.getString('selectedAlphabet') ?? 'A';
     });
   }
 
@@ -168,6 +177,7 @@ class _MainScreenState extends State<MainScreen> {
       ),
       const WordTypeView(),
       SavedWordsPage(dictionaryRepository: widget.dictionaryRepository),
+      const AccountView(),
       const InfoView(),
       SettingPage(updateTheme: widget.updateTheme),
     ]);
@@ -237,6 +247,11 @@ class _MainScreenState extends State<MainScreen> {
                   label: Text('Markah'),
                 ),
                 NavigationRailDestination(
+                  icon: Icon(Icons.person_outline),
+                  selectedIcon: Icon(Icons.person),
+                  label: Text('Akun'),
+                ),
+                NavigationRailDestination(
                   icon: Icon(Icons.info_outlined),
                   selectedIcon: Icon(Icons.info),
                   label: Text('Tentang'),
@@ -280,6 +295,11 @@ class _MainScreenState extends State<MainScreen> {
                   icon: Icon(Icons.bookmark_outline),
                   selectedIcon: Icon(Icons.bookmark),
                   label: "Markah",
+                ),
+                NavigationDestination(
+                  icon: Icon(Icons.person_outline),
+                  selectedIcon: Icon(Icons.person),
+                  label: "Akun",
                 ),
                 NavigationDestination(
                   icon: Icon(Icons.info_outlined),
