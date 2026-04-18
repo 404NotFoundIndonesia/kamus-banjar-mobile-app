@@ -23,7 +23,7 @@ class WordDetailsMobile extends StatelessWidget {
             child: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(24, 16, 8, 16),
+                  padding: const EdgeInsets.fromLTRB(24, 16, 8, 4),
                   child: Row(
                     children: [
                       Expanded(
@@ -58,6 +58,56 @@ class WordDetailsMobile extends StatelessWidget {
                   ),
                 ),
                 Padding(
+                  padding: const EdgeInsets.fromLTRB(24, 0, 24, 12),
+                  child: Row(
+                    children: [
+                      if (word.source == 'community')
+                        Container(
+                          margin: const EdgeInsets.only(right: 8),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).brightness ==
+                                    Brightness.dark
+                                ? const Color(0xFFFB8C00)
+                                : Colors.orange,
+                            borderRadius: BorderRadius.circular(24),
+                          ),
+                          child: const Text(
+                            'Komunitas',
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      if (word.votes != null)
+                        Row(
+                          children: [
+                            Icon(Icons.arrow_upward,
+                                size: 14, color: Colors.grey.shade500),
+                            const SizedBox(width: 2),
+                            Text(
+                              '${word.votes!.up}',
+                              style: TextStyle(
+                                  fontSize: 13, color: Colors.grey.shade500),
+                            ),
+                            const SizedBox(width: 8),
+                            Icon(Icons.arrow_downward,
+                                size: 14, color: Colors.grey.shade500),
+                            const SizedBox(width: 2),
+                            Text(
+                              '${word.votes!.down}',
+                              style: TextStyle(
+                                  fontSize: 13, color: Colors.grey.shade500),
+                            ),
+                          ],
+                        ),
+                    ],
+                  ),
+                ),
+                Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Container(
                     width: double.infinity,
@@ -71,9 +121,9 @@ class WordDetailsMobile extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        ...word.definitions.expand((meaning) {
+                        ...word.meanings.expand((meaning) {
                           index += 1;
-                          return meaning.map((def) {
+                          return meaning.definitions.map((def) {
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -272,8 +322,8 @@ class WordDetailsMobile extends StatelessWidget {
                                             iconSize: 24,
                                             color: Colors.grey.shade600,
                                             onPressed: () => speakWord(
-                                                derivative.syllable.isNotEmpty
-                                                    ? derivative.syllable
+                                                derivative.syllables.isNotEmpty
+                                                    ? derivative.syllables
                                                         .replaceAll('.', ' ')
                                                     : derivative.word),
                                           ),
@@ -293,9 +343,9 @@ class WordDetailsMobile extends StatelessWidget {
                                         ),
                                       ],
                                     ),
-                                  if (derivative.syllable.isNotEmpty)
+                                  if (derivative.syllables.isNotEmpty)
                                     Text(
-                                      derivative.syllable,
+                                      derivative.syllables,
                                       style: TextStyle(
                                         color: Theme.of(context).brightness ==
                                                 Brightness.dark

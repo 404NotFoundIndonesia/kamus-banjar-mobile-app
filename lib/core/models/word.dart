@@ -1,24 +1,50 @@
+class WordVotes {
+  final int up;
+  final int down;
+
+  WordVotes({required this.up, required this.down});
+
+  factory WordVotes.fromJson(Map<String, dynamic> json) {
+    return WordVotes(
+      up: json['up'] ?? 0,
+      down: json['down'] ?? 0,
+    );
+  }
+}
+
+class WordMeaning {
+  late List<WordDefinition> definitions;
+
+  WordMeaning.fromJson(Map<String, dynamic> json) {
+    List<WordDefinition> temp = [];
+    for (var definition in json['definitions'] ?? []) {
+      temp.add(WordDefinition.fromJson(definition));
+    }
+    definitions = temp;
+  }
+}
+
 class Word {
   late String word;
   late String alphabet;
-  late String syllable;
-  late List<List<WordDefinition>> definitions;
+  late String syllables;
+  late String? source;
+  late WordVotes? votes;
+  late List<WordMeaning> meanings;
   late List<WordDerivative> derivatives;
 
   Word.fromJson(Map<String, dynamic> json) {
     word = json['word'];
     alphabet = json['alphabet'];
-    syllable = json['syllables'] ?? '';
+    syllables = json['syllables'] ?? '';
+    source = json['source'];
+    votes = json['votes'] != null ? WordVotes.fromJson(json['votes']) : null;
 
-    List<List<WordDefinition>> tempDefinitions = [];
-    for (var meaning in json['meanings']) {
-      List<WordDefinition> meaningDefinition = [];
-      for (var definition in meaning['definitions'] ?? []) {
-        meaningDefinition.add(WordDefinition.fromJson(definition));
-      }
-      tempDefinitions.add(meaningDefinition);
+    List<WordMeaning> tempMeanings = [];
+    for (var meaning in json['meanings'] ?? []) {
+      tempMeanings.add(WordMeaning.fromJson(meaning));
     }
-    definitions = tempDefinitions;
+    meanings = tempMeanings;
 
     List<WordDerivative> tempDerivatives = [];
     for (var derivative in json['derivatives'] ?? []) {
@@ -56,12 +82,12 @@ class WordExample {
 
 class WordDerivative {
   late String word;
-  late String syllable;
+  late String syllables;
   late List<WordDefinition> definitions;
 
   WordDerivative.fromJson(Map<String, dynamic> json) {
     word = json['word'];
-    syllable = json['syllables'] ?? '';
+    syllables = json['syllables'] ?? '';
     List<WordDefinition> tempDefinitions = [];
     for (var definition in json['definitions'] ?? []) {
       tempDefinitions.add(WordDefinition.fromJson(definition));
